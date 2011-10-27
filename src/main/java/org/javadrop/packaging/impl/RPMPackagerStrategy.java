@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011 gregorycooper
+ * Copyright 2011 iovation
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ import org.javadrop.runner.impl.MainServiceStrategy;
  * 
  * The 'mapping' this rpm strategy uses is simple.  It takes the destination files and mirrors them
  * on the 
- * @author gregorycooper
+ * @author gcooperpdx
  *
  */
 public class RPMPackagerStrategy extends BasePackagerStrategy {

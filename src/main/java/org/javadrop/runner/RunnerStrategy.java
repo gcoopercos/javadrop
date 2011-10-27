@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011 gregorycooper
+ * Copyright 2011 iovation
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import org.apache.maven.plugin.logging.Log;
  * needed for a unix service. Another example might be a strategy for generating run-scripts
  * for executing a java application stand-alone.
  *  
- * @author gregorycooper
+ * @author gcooperpdx
  *
  */
 public interface RunnerStrategy {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011 gregorycooper
+ * Copyright 2011 iovation
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import org.apache.velocity.app.Velocity;
 /**
  * This uses velocity to process scripts.
  * 
- * @author gregorycooper
+ * @author gcooperpdx
  * 
  */
 public class VelocityTemplateProcessorImpl implements TemplateProcessor {

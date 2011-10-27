@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2011 gregorycooper
+  Copyright 2011 iovation
   
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -47,6 +47,9 @@
 						<SVC_GROUP_ID>700</SVC_GROUP_ID>
 						<JTY_MAIN_CLASS>test.class</JTY_MAIN_CLASS>
 						<JTY_NAME>jtytestsvc</JTY_NAME>
+						<PKG_NAME>jtytestsvc</PKG_NAME>
+						<PKG_VERSION>1.0-SNAPSHOT</PKG_VERSION> <!--  project.version -->
+						<PKG_RELEASE>1309218173</PKG_RELEASE> <!-- build.version -->
 						<PKG_INSTALL_LOC>/usr/local/iovation/jtytestsvc</PKG_INSTALL_LOC>
 					</javadropVariables>
 				</configuration>

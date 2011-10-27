@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011 gregorycooper
+ * Copyright 2011 iovation
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import java.util.Map;
  * This implementation of the service strategy is designed to support stand-alone
  * services that have their own 'main(..)'. (Not jetty based web services) 
  * 
- * @author gregorycooper
+ * @author gcooperpdx
  *
  */
 public class MainServiceStrategy extends BaseRunnerStrategy {

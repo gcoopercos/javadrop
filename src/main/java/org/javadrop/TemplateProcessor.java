@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011 gregorycooper
+ * Copyright 2011 iovation
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import org.apache.maven.plugin.MojoExecutionException;
  * Implementations are responsible for filtering runner and packaging scripts through
  * some sort of template processing mechanism.
  * 
- * @author gregorycooper
+ * @author gcooperpdx
  *
  */
 public interface TemplateProcessor {

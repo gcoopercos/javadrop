@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011 gregorycooper
+ * Copyright 2011 iovation
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import java.util.Map;
  * This implementation of the service strategy is designed to jetty web
  * services (with a jetty.sh run script)
  * 
- * @author gregorycooper
+ * @author gcooperpdx
  *
  */
 public class JettyStrategy extends BaseRunnerStrategy {

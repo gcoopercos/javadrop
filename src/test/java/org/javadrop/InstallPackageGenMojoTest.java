@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011 gregorycooper
+ * Copyright 2011 iovation
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ import org.junit.Test;
  * Simplistic sanity unit test for seeing that the scriptgen is doing something
  * reasonable.
  * 
- * @author gregorycooper
+ * @author gcooperpdx
  * 
  */
 public class InstallPackageGenMojoTest extends AbstractMojoTestCase {
@@ -310,7 +310,7 @@ public class InstallPackageGenMojoTest extends AbstractMojoTestCase {
         }
         
         // Check to see if the rpm is there.
-        File rpmFile = new File(getBasedir() + "/target/testdata/rpmtest-1.0-1.noarch.rpm");
+        File rpmFile = new File(getBasedir() + "/target/testdata/jtestapp-1.0-SNAPSHOT-1309218173.noarch.rpm");
         checkRPMFile(rpmFile, "dummy.jar", "/usr/local/iovation/jtestapp/lib/");
     }
     

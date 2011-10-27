@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011 gregorycooper
+ * Copyright 2011 iovation
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import org.javadrop.runner.RunnerStrategy;
  * bundle a grouping of files in such a way that creates an artifact
  * that can be installed on a machine.
  * 
- * @author gregorycooper
+ * @author gcooperpdx
  *
  */
 public interface PackagerStrategy {

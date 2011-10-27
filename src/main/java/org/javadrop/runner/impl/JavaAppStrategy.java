@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011 gregorycooper
+ * Copyright 2011 iovation
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import java.util.Map;
  * This implementation of the runner strategy is designed to support stand-alone
  * java client programs that have their own 'main(..)'.
  * 
- * @author gregorycooper
+ * @author gcooperpdx
  *
  */
 public class JavaAppStrategy extends BaseRunnerStrategy {

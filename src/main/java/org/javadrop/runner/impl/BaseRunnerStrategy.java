@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011 gregorycooper
+ * Copyright 2011 iovation
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ import org.javadrop.runner.RunnerStrategy;
  * said that, there will be variables that are required.  These will be in the
  * 'requiredVariables' set.
  * 
- * @author gregorycooper
+ * @author gcooperpdx
  *
  */
 public abstract class BaseRunnerStrategy implements RunnerStrategy {
