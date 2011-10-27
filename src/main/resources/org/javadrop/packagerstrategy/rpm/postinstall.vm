@@ -1,0 +1,69 @@
+#!/bin/sh
+
+
+#set( $SERV_LOG = "$SVC_INSTALL_LOC/log/$SVC_NAME" )
+#set( $SVC_CACHE_ROOT = "$SVC_INSTALL_LOC/cache" )
+
+# mod or script so they have the execute bit set
+chmod +x $SVC_INSTALL_LOC/bin/*
+
+if [ -e $SVC_INSTALL_LOC/bin/${SVC_NAME}.sh ];
+then
+    if [ ! -e /etc/init.d/$SVC_NAME ]; then
+        ln -s $SVC_INSTALL_LOC/bin/${SVC_NAME}.sh /etc/init.d/$SVC_NAME
+    fi
+fi
+
+
+if [ ! -e $SERV_LOG ];
+then
+    mkdir -p $SERV_LOG
+fi
+
+# setup the cache directory if needed
+if [ ! -e $SVC_CACHE_ROOT ];
+then
+    mkdir $SVC_CACHE_ROOT
+fi
+
+if [ ! -e $SVC_CACHE_ROOT/redis ];
+then
+    mkdir $SVC_CACHE_ROOT/redis
+fi
+
+if [ ! -e $SVC_CACHE_ROOT/$SVC_NAME ];
+then
+    mkdir $SVC_CACHE_ROOT/$SVC_NAME
+fi
+
+if [ ! -e $SVC_INSTALL_LOC/cache ]; then
+    # create the symlink to this from the services home directory
+    ln -s $SVC_CACHE_ROOT/$SVC_NAME $SVC_INSTALL_LOC/cache
+fi
+
+# make sure $SVC_CACHE_ROOT is owned by $SVC_USER
+if [ -e $SVC_CACHE_ROOT/$SVC_NAME ];
+then
+    chown -R $SVC_USER:$SVC_GROUP $SVC_CACHE_ROOT/$SVC_NAME
+fi
+
+if [ -e $SERV_LOG ];
+then
+    chown -R $SVC_USER:$SVC_GROUP $SERV_LOG
+fi
+
+chmod 755 $SERV_LOG
+chmod 755 $SVC_CACHE_ROOT/$SVC_NAME
+
+# setup on the final steps of the service so on reboots, it will startup
+# Register the service on initial install
+if [ "$1" = "1" ]; then
+    if [ -h "/etc/rc.d/init.d/${SVC_NAME}" ]; then
+        echo "Adding ${SVC_NAME} service"
+        chkconfig --add ${SVC_NAME}
+        chkconfig ${SVC_NAME} on
+    fi
+fi
+
+echo "Post Install Completed! Remember to go to ${SVC_INSTALL_LOC}/conf and copy the correct configs for your install environment"
+

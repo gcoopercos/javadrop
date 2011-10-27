@@ -1,2 +1,31 @@
-Placeholder
+JavaDrop
+--------
+This is intended to be a plugin for maven that will be responsible for creating an installable package
+for java applications.  There are many solutions out there that take care of this but I never found
+
+Being a maven plugin this has the advantage of integrating more smoothly into the build process. The
+primary goal is to be able to keep the settings in the .pom to a mimimum to be able to build something
+useful. The hard-work of all the packaging specifics is to be abstracted away inside of this plugin.
+
+
+Runner Component
+----------------
+Different software products have different runtime needs. A piece of software might be a linux service.
+This software would require a certain set of run scripts. In contrast, another piece of software might
+be a stand-alone java application that doesn't require the same service infrastructure but has the need
+for some custom run scripts to setup the classpath properly. These runtime needs would be implemented
+by a 'runner strategy'.
+
+Packaging Component
+-------------------
+Different strategies will be available to package the code, source, documentation, etc... up into a
+format suitable for the target environment.  One startegy might create a .deb package for debian systems,
+for example, while another a .rpm for red hat systems.  This aspect of the plugin is designed to replace
+the need for using the maven assembly plugin. 
+
+
+Runner & Packager interaction
+-----------------------------
+Packagers can interact with multiple runners. 
+
 

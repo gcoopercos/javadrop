@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2011 gregorycooper
+  
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+    http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project>
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-javadrop-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>install</phase>
+						<goals>
+							<goal>javadrop</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<runnerClasses>
+					  <param>org.javadrop.runner.impl.MainServiceStrategy</param>
+					</runnerClasses>
+					
+					<packagerClasses>
+					  <param>org.javadrop.packaging.impl.RPMPackagerStrategy</param>
+					</packagerClasses>
+					<!-- serivceType left out for testing -->
+					<javadropVariables>
+						<SVC_NAME>testservice</SVC_NAME>
+						<SVC_USER>testuser</SVC_USER>
+						<SVC_GROUP>ioapp</SVC_GROUP>
+						<SVC_INSTALL_LOC>/usr/local/iovation/testservice</SVC_INSTALL_LOC>
+						<USER_ID>20</USER_ID>
+						<GROUP_ID>700</GROUP_ID>
+						<SVC_MAIN_CLASS>test.class</SVC_MAIN_CLASS>
+					</javadropVariables>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+    <!-- http://svn.codehaus.org/jetty/jetty/trunk/extras/spring/etc/jetty-spring.xml -->
+    <!-- http://docs.codehaus.org/display/JETTY/Embedding+Jetty -->
+    <!-- http://jetty.mortbay.org/xref/org/mortbay/jetty/example/OneServletContext.html -->
+    <!-- http://ws.apache.org/xmlrpc/server.html -->
+
+    <bean name="Server" class="org.mortbay.jetty.Server" init-method="start" destroy-method="stop"
+          p:stopAtShutdown="true" p:sendServerVersion="true" p:sendDateHeader="true" p:gracefulShutdown="1000"
+            p:threadPool-ref="threadPool" p:handler-ref="handlers">
+        <!-- Use this connector for many frequently idle connections
+             and for threadless continuations.
+        -->
+        <property name="connectors">
+            <list>
+                <ref bean="nio"/>
+            </list>
+        </property>
+
+    </bean>
+    <bean id="handlers" class="org.mortbay.jetty.handler.HandlerCollection">
+        <property name="handlers">
+            <list>
+                <!-- order is very important here; the contexts should come before anything else -->
+                <bean id="contexts" class="org.mortbay.jetty.handler.ContextHandlerCollection">
+                    <property name="handlers">
+                        <list>
+                            <bean class="org.mortbay.jetty.webapp.WebAppContext"
+                                  p:contextPath="/${SVC_CONTEXT_NAME}" p:extractWAR="true"
+                                  p:war="war/${SVC_CONTEXT_NAME}.war"
+                                  p:defaultsDescriptor="conf/jetty-webdefault.xml" p:tempDirectory="war/"/>
+                        </list>
+                    </property>
+                </bean>
+                <bean id="defaultHandler" class="org.mortbay.jetty.handler.DefaultHandler"/>
+                <!--<bean id="requestLog" class="org.mortbay.jetty.handler.RequestLogHandler"/>-->
+            </list>
+        </property>
+    </bean>
+
+    <bean id="nio" class="org.mortbay.jetty.nio.SelectChannelConnector" p:port="8080" p:maxIdleTime="5000"
+          p:acceptors="2" p:statsOn="false" p:lowResourcesConnections="5000"
+          p:lowResourcesMaxIdleTime="5000"/>
+
+    <!-- Optional Java 5 bounded threadpool with job queue
+    <New class="org.mortbay.thread.concurrent.ThreadPool">
+      <Set name="corePoolSize">50</Set>
+      <Set name="maximumPoolSize">50</Set>
+    </New>
+    -->
+    <bean id="threadPool" class="org.mortbay.thread.QueuedThreadPool" p:minThreads="10" p:maxThreads="200"
+          p:lowThreads="20" p:spawnOrShrinkAt="2"/>
+
+    <bean id="jettyJmxContainer" class="org.mortbay.management.MBeanContainer">
+        <constructor-arg ref="jmxServer"/>
+    </bean>
+    <bean id="serverContainer" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean"
+          p:targetObject="Server" p:targetMethod="getContainer"/>
+
+    <bean id="jmxInjection" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean"
+          p:targetObject="serverContainer" p:targetMethod="addEventListener">
+        <property name="arguments">
+            <list>
+                <ref local="jmxContainer"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="jmxServer" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean"
+          p:targetClass="java.lang.management.ManagementFactory" p:staticMethod="getPlatformMBeanServer"/>
+
+
+    <bean id="jmxContainer" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean"
+          p:targetObject-ref="jettyJmxContainer" p:targetMethod="start"/>
+
+    <!--
+    <New id="ServerLog" class="java.io.PrintStream">
+      <Arg>
+        <New class="org.mortbay.util.RolloverFileOutputStream">
+          <Arg><SystemProperty name="jetty.home" default="."/>/logs/yyyy_mm_dd.stderrout.log</Arg>
+          <Arg type="boolean">false</Arg>
+          <Arg type="int">90</Arg>
+          <Arg><Call class="java.util.TimeZone" name="getTimeZone"><Arg>GMT</Arg></Call></Arg>
+          <Get id="ServerLogName" name="datedFilename"/>
+        </New>
+      </Arg>
+    </New>
+
+    <Call class="org.mortbay.log.Log" name="info"><Arg>Redirecting stderr/stdout to <Ref id="ServerLogName"/></Arg></Call>
+    <Call class="java.lang.System" name="setErr"><Arg><Ref id="ServerLog"/></Arg></Call>
+    <Call class="java.lang.System" name="setOut"><Arg><Ref id="ServerLog"/></Arg></Call>
+    -->
+</beans>

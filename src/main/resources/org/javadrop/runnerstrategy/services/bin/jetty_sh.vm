@@ -1,0 +1,81 @@
+#!/bin/bash
+
+#
+# Scrubbed: YES
+#
+# Required variables:
+#  PKG_INSTALL_LOC
+#  
+#
+# Script designed to launch a jetty based service.
+#
+#set( $PID_FILE = "${PKG_INSTALL_LOC}/jetty.pid" )
+
+
+#set( $CLASSPATH = "")
+#set( $lib = "")
+#set( $OPT = "" )
+#set( $OPTARG = "" )
+#set( $USAGE = "" )
+#set( $prog_home = "" )
+#set( $log_dir = "" )
+#set( $OPTS = "" )
+#set( $JVM_OPTS = "" )
+#set( $config_file = "" )
+#set( $foreground = "" )
+#set( $pidfile = "" )
+#set( $JAVA = "" )
+#set( $JAVA_HOME = "" )
+#set( $JETTY_PID = "" ) 
+
+prog_home=${PKG_INSTALL_LOC}
+log_dir=${PKG_INSTALL_LOC}/log
+pidfile=${PID_FILE}
+
+if [ ! -d "\$prog_home" ]; then
+    echo "Set home directory (-h)" >&2  
+    echo "\$USAGE"
+    exit 1;
+fi;
+if [ ! -d "\$JAVA_HOME" ]; then
+    export JAVA_HOME=/usr/java/latest
+fi;
+if [ -x "\$JAVA_HOME/bin/java" ]; then
+    JAVA=\$JAVA_HOME/bin/java
+else
+    echo "Where's Java? I can't find it" >&2 
+    exit 1;
+fi
+
+cd \$prog_home
+. conf/env
+#if ( $JMX_PORT )
+    export OPTS=" \$JVM_OPTS  -Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.port=${JMX_PORT} "
+#end
+
+export JETTY_HOME=$prog_home
+
+config_file=conf/jetty-spring.xml;
+if [ ! -f \$config_file ]; then
+    echo "Expecting \$prog_home/\$config_file" >&2
+    exit 1
+fi
+
+CLASSPATH=.
+for lib in `ls lib/*.jar`
+do
+    CLASSPATH=\$CLASSPATH:\$lib
+done
+
+
+umask u=rwx,g=rwx,o=
+
+if [ -z "\$foreground" ]; then
+    \$JAVA \$OPTS -cp \$CLASSPATH org.mortbay.jetty.spring.Main \$config_file &>\$log_dir/start.log &
+    JETTY_PID=$!!
+    if [ "\${pidfile}x" != "x" ]; then 
+        echo \$JETTY_PID > \$pidfile
+    fi
+else
+    \$JAVA \$OPTS -cp \$CLASSPATH org.mortbay.jetty.spring.Main \$config_file
+fi
