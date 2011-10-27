@@ -72,7 +72,7 @@ public class RPMPackagerStrategy extends BasePackagerStrategy {
         	    String leafDirName = instEntry.getKey().getName();
         	    File installDir;
         	    if (isServiceDir(leafDirName)) {
-        	        installDir = new File(getServiceDirectory() + File.separator + leafDirName);
+        	        installDir = new File(getServiceDirectory());
         	    } else {
         	        installDir = new File(getInstallLoc() + File.separator + leafDirName);
         	    }
