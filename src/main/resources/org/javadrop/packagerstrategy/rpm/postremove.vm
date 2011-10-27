@@ -11,9 +11,9 @@
 
 # We are running an rpm delete so lets remove the service
 if [ "$1" = "0" ]; then
-    if [ -h "/etc/rc.d/init.d/${SVC_NAME}" ]; then
-        echo "Removing ${SVC_NAME} service"
-        service ${SVC_NAME} stop
-        chkconfig --del ${SVC_NAME}
+    if [ -h "/etc/rc.d/init.d/${PKG_NAME}" ]; then
+        echo "Removing ${PKG_NAME} service"
+        service ${PKG_NAME} stop
+        chkconfig --del ${PKG_NAME}
     fi
 fi

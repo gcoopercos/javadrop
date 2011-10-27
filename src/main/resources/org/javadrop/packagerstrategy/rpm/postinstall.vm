@@ -1,16 +1,26 @@
 #!/bin/sh
 
+#*
+Variables used
+   PKG_USER
+   PKG_USERID
+   PKG_GROUP
+   PKG_GROUPID
+   PKG_NAME
+   PKG_INSTALL_LOC
+*#
 
-#set( $SERV_LOG = "$SVC_INSTALL_LOC/log/$SVC_NAME" )
-#set( $SVC_CACHE_ROOT = "$SVC_INSTALL_LOC/cache" )
+
+#set( $SERV_LOG = "$PKG_INSTALL_LOC/log/$PKG_NAME" )
+#set( $PKG_CACHE_ROOT = "$PKG_INSTALL_LOC/cache" )
 
 # mod or script so they have the execute bit set
-chmod +x $SVC_INSTALL_LOC/bin/*
+chmod +x $PKG_INSTALL_LOC/bin/*
 
-if [ -e $SVC_INSTALL_LOC/bin/${SVC_NAME}.sh ];
+if [ -e $PKG_INSTALL_LOC/bin/${PKG_NAME}.sh ];
 then
-    if [ ! -e /etc/init.d/$SVC_NAME ]; then
-        ln -s $SVC_INSTALL_LOC/bin/${SVC_NAME}.sh /etc/init.d/$SVC_NAME
+    if [ ! -e /etc/init.d/$PKG_NAME ]; then
+        ln -s $PKG_INSTALL_LOC/bin/${PKG_NAME}.sh /etc/init.d/$PKG_NAME
     fi
 fi
 
@@ -21,49 +31,49 @@ then
 fi
 
 # setup the cache directory if needed
-if [ ! -e $SVC_CACHE_ROOT ];
+if [ ! -e $PKG_CACHE_ROOT ];
 then
-    mkdir $SVC_CACHE_ROOT
+    mkdir $PKG_CACHE_ROOT
 fi
 
-if [ ! -e $SVC_CACHE_ROOT/redis ];
+if [ ! -e $PKG_CACHE_ROOT/redis ];
 then
-    mkdir $SVC_CACHE_ROOT/redis
+    mkdir $PKG_CACHE_ROOT/redis
 fi
 
-if [ ! -e $SVC_CACHE_ROOT/$SVC_NAME ];
+if [ ! -e $PKG_CACHE_ROOT/$PKG_NAME ];
 then
-    mkdir $SVC_CACHE_ROOT/$SVC_NAME
+    mkdir $PKG_CACHE_ROOT/$PKG_NAME
 fi
 
-if [ ! -e $SVC_INSTALL_LOC/cache ]; then
+if [ ! -e $PKG_INSTALL_LOC/cache ]; then
     # create the symlink to this from the services home directory
-    ln -s $SVC_CACHE_ROOT/$SVC_NAME $SVC_INSTALL_LOC/cache
+    ln -s $PKG_CACHE_ROOT/$PKG_NAME $PKG_INSTALL_LOC/cache
 fi
 
-# make sure $SVC_CACHE_ROOT is owned by $SVC_USER
-if [ -e $SVC_CACHE_ROOT/$SVC_NAME ];
+# make sure $PKG_CACHE_ROOT is owned by $PKG_USER
+if [ -e $PKG_CACHE_ROOT/$PKG_NAME ];
 then
-    chown -R $SVC_USER:$SVC_GROUP $SVC_CACHE_ROOT/$SVC_NAME
+    chown -R $PKG_USER:$PKG_GROUP $PKG_CACHE_ROOT/$PKG_NAME
 fi
 
 if [ -e $SERV_LOG ];
 then
-    chown -R $SVC_USER:$SVC_GROUP $SERV_LOG
+    chown -R $PKG_USER:$PKG_GROUP $SERV_LOG
 fi
 
 chmod 755 $SERV_LOG
-chmod 755 $SVC_CACHE_ROOT/$SVC_NAME
+chmod 755 $PKG_CACHE_ROOT/$PKG_NAME
 
 # setup on the final steps of the service so on reboots, it will startup
 # Register the service on initial install
 if [ "$1" = "1" ]; then
-    if [ -h "/etc/rc.d/init.d/${SVC_NAME}" ]; then
-        echo "Adding ${SVC_NAME} service"
-        chkconfig --add ${SVC_NAME}
-        chkconfig ${SVC_NAME} on
+    if [ -h "/etc/rc.d/init.d/${PKG_NAME}" ]; then
+        echo "Adding ${PKG_NAME} service"
+        chkconfig --add ${PKG_NAME}
+        chkconfig ${PKG_NAME} on
     fi
 fi
 
-echo "Post Install Completed! Remember to go to ${SVC_INSTALL_LOC}/conf and copy the correct configs for your install environment"
+echo "Post Install Completed! Remember to go to ${PKG_INSTALL_LOC}/conf and copy the correct configs for your install environment"
 

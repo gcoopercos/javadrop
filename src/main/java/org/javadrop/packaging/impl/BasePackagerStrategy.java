@@ -49,12 +49,12 @@ public abstract class BasePackagerStrategy  implements PackagerStrategy {
 	private void applyDefaults()
 	{
 		packagerVariables = new HashMap<String, String>();
-		packagerVariables.put("SVC_NAME", "service");
-		packagerVariables.put("SVC_INSTALL_LOC","/usr/local/javadrop/service");
-		packagerVariables.put("SVC_USER", "javadrop");
-		packagerVariables.put("SVC_GROUP", "javadrop");
-		packagerVariables.put("USER_ID", "55");
-		packagerVariables.put("GROUP_ID", "700");
+		packagerVariables.put("PKG_NAME", "service");
+		packagerVariables.put("PKG_INSTALL_LOC","/usr/local/javadrop/service");
+		packagerVariables.put("PKG_USER", "javadrop");
+		packagerVariables.put("PKG_GROUP", "javadrop");
+		packagerVariables.put("PKG_USERID", "55");
+		packagerVariables.put("PKG_GROUPID", "700");
 		
 		packagerVariables.put("RUNNER_NAME", "service");
 		packagerVariables.put("RUNNER_INSTALL_LOC","/usr/local/javadrop/service");

@@ -69,7 +69,13 @@ public class RPMPackagerStrategy extends BasePackagerStrategy {
         for (RunnerStrategy runner : runners) {
         	Map<File, Collection<File>> installSet = runner.getInstallSet(workingDirectory);
         	for (Map.Entry<File, Collection<File>> instEntry : installSet.entrySet()) {
-        		File installDir = new File(getInstallLoc() + File.separator + instEntry.getKey().getName());
+        	    String leafDirName = instEntry.getKey().getName();
+        	    File installDir;
+        	    if (isServiceDir(leafDirName)) {
+        	        installDir = new File(getServiceDirectory() + File.separator + leafDirName);
+        	    } else {
+        	        installDir = new File(getInstallLoc() + File.separator + leafDirName);
+        	    }
         		
         		// If destination directory isn't available, bail.
     			for (File destFile : instEntry.getValue()) {
@@ -89,6 +95,24 @@ public class RPMPackagerStrategy extends BasePackagerStrategy {
         // Create the rpm
         task.execute();
 	}
+	
+	/**
+	 * Checks to see if the given directory 'leaf' name is that of the service script directory for
+	 * the system.
+	 * @param dirName Leaf name of the directory in question
+	 * @return True if 'dirName' is the name of the os-specific location for service scripts
+	 */
+	private boolean isServiceDir(String dirName) {
+	    return "init.d".equals(dirName);
+	}
+	
+	/**
+	 * Get the directory that contains the service launching scripts. Currently this is very CentOS oriented
+	 * @return The system-specific path for where the service start scripts are.
+	 */
+    private String getServiceDirectory() {
+        return File.separator + "etc" + File.separator + "rc.d" + File.separator + "init.d";
+    }
 
 	@Override
 	public Map<File, File> getConversionFiles(File outputDirectory,

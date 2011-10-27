@@ -3,10 +3,12 @@
 #*
  External parameters expected:
 
-   USER_ID     | REQUIRED  | No default
-   GROUP_ID    | REQUIRED  | No default
-   SVC_NAME    | REQUIRED  | No default 
-   SVC_INSTALL_LOC | REQUIRED | No default
+   PKG_USER
+   PKG_USERID
+   PKG_GROUP
+   PKG_GROUPID
+   PKG_NAME
+   PKG_INSTALL_LOC
 *#
 
 #*
@@ -15,40 +17,40 @@ below properly.
 *#
 #set( $WAR_HOME = "" )
 
-WAR_HOME=$SVC_INSTALL_LOC/war
+WAR_HOME=$PKG_INSTALL_LOC/war
 
 if [ "$1" = "2" ]; then
     # we are doing an upgrade
-    echo "Stopping $SVC_NAME service"
-    /sbin/service $SVC_NAME stop
+    echo "Stopping $PKG_NAME service"
+    /sbin/service $PKG_NAME stop
 fi;
 
 #need to check every time because if there is no guarantee the dir or user exists
 
-if [ ! -e $SVC_INSTALL_LOC ]; then
-    mkdir -p $SVC_INSTALL_LOC
+if [ ! -e $PKG_INSTALL_LOC ]; then
+    mkdir -p $PKG_INSTALL_LOC
 fi;
 
-if [ -z `grep $SVC_GROUP /etc/group` ]; then
-    echo "Adding group $SVC_GROUP"
-    /usr/sbin/groupadd -g GROUP_ID $SVC_GROUP
+if [ -z `grep $PKG_GROUP /etc/group` ]; then
+    echo "Adding group $PKG_GROUP"
+    /usr/sbin/groupadd -g PKG_GROUPID $PKG_GROUP
 fi;
-if [ -z `grep $SVC_USER /etc/passwd` ]; then
-    echo "Adding user $SVC_USER"
-    /usr/sbin/useradd -M -g $GROUP_ID -d \$ROOT/$SVC_NAME -u $USER_ID $SVC_USER
+if [ -z `grep $PKG_USER /etc/passwd` ]; then
+    echo "Adding user $PKG_USER"
+    /usr/sbin/useradd -M -g $PKG_GROUPID -d $PKG_INSTALL_LOC -u $PKG_USERID $PKG_USER
 fi;
 
-chown root:$SVC_GROUP $SVC_INSTALL_LOC &>/dev/null
-chmod 755 $SVC_INSTALL_LOC
+chown root:$PKG_GROUP $PKG_INSTALL_LOC &>/dev/null
+chmod 755 $PKG_INSTALL_LOC
 
 ## Patch for upgrading to use drsuser instead of ioapp as the user
-echo "SVCUSER: $SVC_USER"
-echo "SVCGROUP: $SVC_GROUP"
-echo "SVCNAME: $SVC_NAME"
-chown -R $SVC_USER:$SVC_GROUP $SVC_INSTALL_LOC/$SVC_NAME &>/dev/null
+echo "USER: $PKG_USER"
+echo "GROUP: $PKG_GROUP"
+echo "NAME: $PKG_NAME"
+chown -R $PKG_USER:$PKG_GROUP $PKG_INSTALL_LOC/$PKG_NAME &>/dev/null
 
 if [ -d \$WAR_HOME ]; then
     cd \$WAR_HOME/..
     rm -rf war
-    cd $SVC_INSTALL_LOC
+    cd $PKG_INSTALL_LOC
 fi
