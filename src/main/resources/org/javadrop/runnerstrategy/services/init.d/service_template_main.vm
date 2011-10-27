@@ -4,7 +4,9 @@
 # SVC_NAME
 # SVC_INSTALL_LOC
 #
-# Service execution script for stand-alone mode only. (It doesn't support jetty)
+# This service currently support a 'jetty' or 'main()' launch.
+# This needs to be abstracted out so this just supports multiple
+# services.
 #
 
 #set( $PID_FILE = "${PKG_INSTALL_LOC}/${SVC_NAME}.pid" )
@@ -27,6 +29,7 @@ RETVAL=0
 serviceparam=$3
 
 MY_SCRIPT="${PKG_INSTALL_LOC}/bin/${SVC_NAME}.sh"
+MY_WEB_SCRIPT="${PKG_INSTALL_LOC}/bin/${JTY_NAME}.sh"
 
 # Retry Limit
 LIMIT=15
@@ -53,8 +56,9 @@ start() {
         
         # Note that "-x" is an arbitrary flag for passing a command line parameter to a java service.
         shopt -s nocasematch
+
         if [ -z "\$serviceparam" ]; then
-            su $SVC_USER -c "\$MY_SCRIPT start"
+            su $SVC_USER -c "\$MY_WEB_SCRIPT start"
         else
             # If there is a config file parameter pass it along to the stand along service
             su $SVC_USER -c "\$MY_SCRIPT start -x \$serviceparam"
