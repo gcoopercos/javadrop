@@ -10,10 +10,6 @@ Variables used
    PKG_INSTALL_LOC
 *#
 
-echo "First nap"
-sleep 5
-echo "First nap over"
-
 #set( $SERV_LOG = "$PKG_INSTALL_LOC/log/$PKG_NAME" )
 #set( $PKG_CACHE_ROOT = "$PKG_INSTALL_LOC/cache" )
 
@@ -77,6 +73,3 @@ fi
 
 echo "Post Install Completed! Remember to go to ${PKG_INSTALL_LOC}/conf and copy the correct configs for your install environment"
 
-echo "Second nap"
-sleep 5
-echo "Second nap over"

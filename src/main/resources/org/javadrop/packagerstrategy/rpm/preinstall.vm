@@ -56,8 +56,6 @@ echo "NAME: $PKG_NAME"
 echo "Executing  chown root:$PKG_GROUP $PKG_INSTALL_LOC"
 #chown -R $PKG_USER:$PKG_GROUP $PKG_INSTALL_LOC &>/dev/null
 chown -R $PKG_USER:$PKG_GROUP $PKG_INSTALL_LOC
-echo "Snore..."
-sleep 10
 chmod 755 $PKG_INSTALL_LOC
 
 echo "Preinstallation complete."
