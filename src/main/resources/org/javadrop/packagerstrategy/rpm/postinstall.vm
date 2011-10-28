@@ -75,5 +75,9 @@ if [ "$1" = "1" ]; then
     fi
 fi
 
+if [ -f "/etc/rc.d/init.d/${PKG_NAME}" ]; then
+    chmod 755 "/etc/rc.d/init.d/${PKG_NAME}"
+fi
+
 echo "Post Install Completed! Remember to go to ${PKG_INSTALL_LOC}/conf and copy the correct configs for your install environment"
 

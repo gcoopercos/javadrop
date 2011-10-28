@@ -2,15 +2,16 @@
 
 # Variables required from external plugin:
 # SVC_NAME
-# SVC_INSTALL_LOC
+# JTY_NAME
+# PKG_INSTALL_LOC
 #
 # This service currently support a 'jetty' or 'main()' launch.
 # This needs to be abstracted out so this just supports multiple
 # services.
 #
 
-#set( $PID_FILE = "${PKG_INSTALL_LOC}/${SVC_NAME}.pid" )
-#set( $LOCK_FILE = "${PKG_INSTALL_LOC}/${SVC_NAME}.lock" )
+#set( $PID_FILE = "${PKG_INSTALL_LOC}/${PKG_NAME}.pid" )
+#set( $LOCK_FILE = "${PKG_INSTALL_LOC}/${PKG_NAME}.lock" )
 
 #*
 The following 'empty sets' are necessary so that velocity will escape the variables
@@ -18,7 +19,7 @@ below properly. These are variables that are local to the script and not part of
 velocity context.
 *#
 #set( $MY_SCRIPT = "" )
-#set( $MY_JETTY_SCRIPT = "" )
+#set( $MY_WEB_SCRIPT = "" )
 #set( $RETVAL = "" )
 #set( $LIMIT = "" )
 #set( $PID = "" )
@@ -43,26 +44,26 @@ umask u=rwx,g=rwx,o=
 . /etc/init.d/functions
 
 start() {
-    echo -n $"Starting $SVC_NAME: "
+    echo -n $"Starting $PKG_NAME: "
 
     check_if_running
     if [ $? != 0 ]; then
-        echo -n "$SVC_NAME already running"
+        echo -n "$PKG_NAME already running"
         echo_failure
     else
         # need to pre-create the pid file so that the executing user can write to it
         touch $PID_FILE
         echo > $PID_FILE     # clear it out
-        chown $SVC_USER:$SVC_GROUP $PID_FILE
+        chown $PKG_USER:$PKG_GROUP $PID_FILE
         
         # Note that "-x" is an arbitrary flag for passing a command line parameter to a java service.
         shopt -s nocasematch
 
         if [ -z "\$serviceparam" ]; then
-            su $SVC_USER -c "\$MY_WEB_SCRIPT start"
+            su $PKG_USER -c "\$MY_WEB_SCRIPT start"
         else
             # If there is a config file parameter pass it along to the stand along service
-            su $SVC_USER -c "\$MY_SCRIPT start -x \$serviceparam"
+            su $PKG_USER -c "\$MY_SCRIPT start -x \$serviceparam"
         fi
         RETVAL=$?
         check_if_running
@@ -79,11 +80,11 @@ start() {
 }
 
 stop() {
-    echo -n $"Stopping $SVC_NAME: "
+    echo -n $"Stopping $PKG_NAME: "
 
     check_if_running
     if [ $? = 0 ]; then
-        echo -n "$SVC_NAME not running"
+        echo -n "$PKG_NAME not running"
         echo_failure
     else
         kill \$PID
@@ -94,7 +95,7 @@ stop() {
             return
         fi
 
-        echo -n "waiting for $SVC_NAME to stop";
+        echo -n "waiting for $PKG_NAME to stop";
 
         count=0
         while [ "\$count" -lt "\$LIMIT" ]
@@ -122,9 +123,9 @@ stop() {
 status() {
     check_if_running
     if [ $? = 0 ]; then
-        echo "$SVC_NAME not running"
+        echo "$PKG_NAME not running"
     else
-        echo "$SVC_NAME running, pid: \$PID"
+        echo "$PKG_NAME running, pid: \$PID"
     fi
 }
 

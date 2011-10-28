@@ -75,8 +75,17 @@ public class JettyStrategy extends BaseRunnerStrategy {
 		installFiles.add(new File("runners" + File.separator + "log4j.xml"));
 		installFiles.add(new File("runners" + File.separator + "jetty-ebdefault.xml"));
 		installSet.put(new File("runners" + File.separator + "conf"), installFiles);
-		
+
+		installFiles = new ArrayList<File>();
+		intallFiles.add(new File("txn-archive-facade*.war"));
+		installSet.put(new File("runners" + File.separator + "war"), installFiles);
+		packaging/impl/txn-archive-facade-1.0-SNAPSHOT.war
+		 
 		return installSet;
+	}
+
+        private File getGenericWar(File workingDirectory) {
+	    File dirFile[]
 	}
 
 	private String getPrefix() {
