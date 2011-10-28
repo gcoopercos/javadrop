@@ -4,7 +4,7 @@
 
 
         <appender name="logfile" class="org.apache.log4j.FileAppender">
-                <param name="File" value="${SVC_INSTALL_LOC}/log/${SVC_NAME}.log" />
+                <param name="File" value="${PKG_INSTALL_LOC}/log/${PKG_NAME}.log" />
                 <layout class="org.apache.log4j.PatternLayout">
                         <param name="ConversionPattern" value="%d %-5p [%t] %c{1} - %m%n" />
                 </layout>
@@ -20,7 +20,7 @@
         
         <root>
                 <level value="info" />
-                <appender-ref ref="console" />
+                <appender-ref ref="logfile" />
                 <appender-ref ref="errcon" />
         </root>
 
