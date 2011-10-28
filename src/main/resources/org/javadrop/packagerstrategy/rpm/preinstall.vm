@@ -46,9 +46,6 @@ if [ -z '`grep $PKG_USER /etc/passwd`' ]; then
     /usr/sbin/useradd -M -g $PKG_GROUPID -d $PKG_INSTALL_LOC -u $PKG_USERID $PKG_USER
 fi;
 
-echo "Executing  chown root:$PKG_GROUP $PKG_INSTALL_LOC"
-chown root:$PKG_GROUP $PKG_INSTALL_LOC &>/dev/null
-chmod 755 $PKG_INSTALL_LOC
 
 echo "Directory and permissions complete."
 
@@ -56,12 +53,11 @@ echo "Directory and permissions complete."
 echo "USER: $PKG_USER"
 echo "GROUP: $PKG_GROUP"
 echo "NAME: $PKG_NAME"
-chown -R $PKG_USER:$PKG_GROUP $PKG_INSTALL_LOC/$PKG_NAME &>/dev/null
-
-if [ -d \$WAR_HOME ]; then
-    cd \$WAR_HOME/..
-    rm -rf war
-    cd $PKG_INSTALL_LOC
-fi
+echo "Executing  chown root:$PKG_GROUP $PKG_INSTALL_LOC"
+#chown -R $PKG_USER:$PKG_GROUP $PKG_INSTALL_LOC &>/dev/null
+chown -R $PKG_USER:$PKG_GROUP $PKG_INSTALL_LOC
+echo "Snore..."
+sleep 10
+chmod 755 $PKG_INSTALL_LOC
 
 echo "Preinstallation complete."
