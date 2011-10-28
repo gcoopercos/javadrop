@@ -122,6 +122,10 @@ public class RPMPackagerStrategy extends BasePackagerStrategy {
                     fs.setConfig(true);
                     fs.setNoReplace(true);
                     fs.setDoc(true);
+                    fs.setGroup(getGroup());
+                    fs.setGid(getGid());
+                    fs.setUserName(getUser());
+                    fs.setUid(getUid());
                     task.addRpmfileset(fs);
                 }
             }

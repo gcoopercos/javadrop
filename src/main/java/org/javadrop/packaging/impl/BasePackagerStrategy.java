@@ -116,4 +116,19 @@ public abstract class BasePackagerStrategy  implements PackagerStrategy {
 		return _log;
 	}
 		
+	protected String getGroup() {
+	    return packagerVariables.get("PKG_GROUP");
+	}
+	
+	protected int getGid() {
+	    int gid = Integer.parseInt(packagerVariables.get("PKG_GROUPID"));
+	    return gid;
+	}
+	protected String getUser() {
+	    return packagerVariables.get("PKG_USER");
+	}
+	protected int getUid() {
+	    int userid = Integer.parseInt(packagerVariables.get("PKG_USERID"));
+	    return userid;
+	}
 }
