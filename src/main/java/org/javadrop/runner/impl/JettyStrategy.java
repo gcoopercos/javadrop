@@ -21,43 +21,54 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-
-
 /**
- * This implementation of the service strategy is designed to jetty web
- * services (with a jetty.sh run script)
+ * This implementation of the service strategy is designed to jetty web services
+ * (with a jetty.sh run script)
  * 
  * @author gcooperpdx
- *
+ * 
  */
 public class JettyStrategy extends BaseRunnerStrategy {
-	
-	@Override
-	public Map<File, File> getConversionFiles(File outputDirectory) {
-		Map<File,File> conversionFiles = new HashMap<File, File>(); //super.getConversionFiles(outputDirectory, serviceName);
 
-		conversionFiles.put(new File(getPrefix() + File.separator + "bin" + File.separator + "jetty_sh.vm"),
-				new File(outputDirectory + File.separator + "runners" +File.separator + "bin" + File.separator + getServiceName() + ".sh"));
-		
-		conversionFiles.put(new File(getPrefix() + File.separator + "init.d" + File.separator + "service_template_main.vm"),
-				new File(outputDirectory + File.separator + "runners" + File.separator + "init.d" + File.separator + getServiceName()));
-		
-		conversionFiles.put(new File(getPrefix() + File.separator + "jettyconf" + File.separator + "env.vm"),
-				new File(outputDirectory + File.separator + "runners" + File.separator + "conf" + File.separator + "env"));
-		
-		conversionFiles.put(new File(getPrefix() + File.separator + "jettyconf" + File.separator + "jetty-spring_xml.vm"),
-				new File(outputDirectory + File.separator + "runners" + File.separator + "conf" + File.separator + "jetty-spring.xml"));
-		
-		conversionFiles.put(new File(getPrefix() + File.separator + "jettyconf" + File.separator + "log4j_xml.vm"),
-				new File(outputDirectory + File.separator + "runners" + File.separator + "conf" + File.separator + "log4j.xml"));
-		
-		conversionFiles.put(new File(getPrefix() + File.separator + "jettyconf" + File.separator + "jetty-webdefault.xml"),
-				new File(outputDirectory + File.separator + "runners" + File.separator + "conf" + File.separator + "jetty-webdefault.xml"));
-		
-		return conversionFiles;
-	}
+    @Override
+    public Map<File, File> getConversionFiles(File outputDirectory) {
+        Map<File, File> conversionFiles = new HashMap<File, File>(); // super.getConversionFiles(outputDirectory,
+                                                                     // serviceName);
 
-	@Override
+        conversionFiles.put(new File(getPrefix() + File.separator + "bin"
+                + File.separator + "jetty_sh.vm"), new File(outputDirectory
+                + File.separator + "runners" + File.separator + "bin"
+                + File.separator + getServiceName() + ".sh"));
+
+        conversionFiles.put(new File(getPrefix() + File.separator + "init.d"
+                + File.separator + "service_template_main.vm"), new File(
+                outputDirectory + File.separator + "runners" + File.separator
+                        + "init.d" + File.separator + getServiceName()));
+
+        conversionFiles.put(new File(getPrefix() + File.separator + "jettyconf"
+                + File.separator + "env.vm"), new File(outputDirectory
+                + File.separator + "runners" + File.separator + "conf"
+                + File.separator + "env"));
+
+        conversionFiles.put(new File(getPrefix() + File.separator + "jettyconf"
+                + File.separator + "jetty-spring_xml.vm"), new File(
+                outputDirectory + File.separator + "runners" + File.separator
+                        + "conf" + File.separator + "jetty-spring.xml"));
+
+        conversionFiles.put(new File(getPrefix() + File.separator + "jettyconf"
+                + File.separator + "log4j_xml.vm"), new File(outputDirectory
+                + File.separator + "runners" + File.separator + "conf"
+                + File.separator + "log4j.xml"));
+
+        conversionFiles.put(new File(getPrefix() + File.separator + "jettyconf"
+                + File.separator + "jetty-webdefault.xml"), new File(
+                outputDirectory + File.separator + "runners" + File.separator
+                        + "conf" + File.separator + "jetty-webdefault.xml"));
+
+        return conversionFiles;
+    }
+
+    @Override
 	public Map<File, Collection<File>> getInstallSet(File workingDirectory) {
 		// TODO Eliminate this synchronization bs.
 		Map<File, Collection<File>> installSet = super.getInstallSet(workingDirectory);
@@ -77,33 +88,42 @@ public class JettyStrategy extends BaseRunnerStrategy {
 		installSet.put(new File("runners" + File.separator + "conf"), installFiles);
 
 		installFiles = new ArrayList<File>();
-		intallFiles.add(new File("txn-archive-facade*.war"));
+		File genWar = getGenericWar(workingDirectory);
+		if (genWar != null) installFiles.add(genWar);
 		installSet.put(new File("runners" + File.separator + "war"), installFiles);
-		packaging/impl/txn-archive-facade-1.0-SNAPSHOT.war
 		 
 		return installSet;
 	}
 
-        private File getGenericWar(File workingDirectory) {
-	    File dirFile[]
+    
+    private File getGenericWar(File workingDirectory) {
+        // TODO  Hacky.. Just grabs 1st war in the directory.  Ugh.
+        File [] dirfiles = workingDirectory.listFiles();
+        for (File dfile : dirfiles) {
+            if (dfile.getName().contains(".war")) {
+                return dfile;
+            }
+        }
+        return null;
 	}
 
-	private String getPrefix() {
-		return "org" + File.separator + "javadrop" + File.separator + "runnerstrategy" + File.separator + "services";
-	}
-	
-	protected void applyDefaults() {
-		super.applyDefaults();
+    private String getPrefix() {
+        return "org" + File.separator + "javadrop" + File.separator
+                + "runnerstrategy" + File.separator + "services";
+    }
 
-		// Assign appropriate defaults to common variables
-		runnerVariables.put("SVC_CONTEXT_NAME", "test-service-facade");
-	}
+    protected void applyDefaults() {
+        super.applyDefaults();
 
-	protected String getServiceName() {
-		String jettyName = runnerVariables.get("JTY_NAME");
-		if (jettyName == null) {
-			get_log().error("No Jetty service name specified (JTY_NAME).");
-		}
-		return jettyName;
-	}
+        // Assign appropriate defaults to common variables
+        runnerVariables.put("SVC_CONTEXT_NAME", "test-service-facade");
+    }
+
+    protected String getServiceName() {
+        String jettyName = runnerVariables.get("JTY_NAME");
+        if (jettyName == null) {
+            get_log().error("No Jetty service name specified (JTY_NAME).");
+        }
+        return jettyName;
+    }
 }
