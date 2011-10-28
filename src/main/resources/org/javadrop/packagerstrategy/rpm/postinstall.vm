@@ -10,20 +10,11 @@ Variables used
    PKG_INSTALL_LOC
 *#
 
-
 #set( $SERV_LOG = "$PKG_INSTALL_LOC/log/$PKG_NAME" )
 #set( $PKG_CACHE_ROOT = "$PKG_INSTALL_LOC/cache" )
 
 # mod or script so they have the execute bit set
 chmod +x $PKG_INSTALL_LOC/bin/*
-
-if [ -e $PKG_INSTALL_LOC/bin/${PKG_NAME}.sh ];
-then
-    if [ ! -e /etc/init.d/$PKG_NAME ]; then
-        ln -s $PKG_INSTALL_LOC/bin/${PKG_NAME}.sh /etc/init.d/$PKG_NAME
-    fi
-fi
-
 
 if [ ! -e $SERV_LOG ];
 then
@@ -75,6 +66,7 @@ if [ "$1" = "1" ]; then
     fi
 fi
 
+# Make service script executable
 if [ -f "/etc/rc.d/init.d/${PKG_NAME}" ]; then
     chmod 755 "/etc/rc.d/init.d/${PKG_NAME}"
 fi

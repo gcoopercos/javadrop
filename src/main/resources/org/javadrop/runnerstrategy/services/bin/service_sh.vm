@@ -20,7 +20,7 @@
 # for executing the service in a specific way.
 #
 
-#set( $PID_FILE = "${SVC_INSTALL_LOC}/${SVC_NAME}.pid" )
+#set( $PID_FILE = "${PKG_INSTALL_LOC}/${PKG_NAME}.pid" )
 
 #*
 The following 'empty sets' are necessary so that velocity will escape the variables
@@ -38,7 +38,7 @@ below properly.
 
 
 #if ( $JMX_PORT )
-    JAVA_OPTS="\$JAVA_OPTS -Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.port=${JMX_PORT} "
+JAVA_OPTS="\$JAVA_OPTS -Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.port=${JMX_PORT} "
 #end
 
 # Assumes java parameter is -x configname
@@ -47,7 +47,7 @@ if [ "$2" = "-x" ]; then
 fi
 
 if [ "\$SERVICE_HOME"="" ]; then
-    SERVICE_HOME=${SVC_INSTALL_LOC};
+    SERVICE_HOME=${PKG_INSTALL_LOC};
 fi
 if [ ! -d \$SERVICE_HOME ]; then
     echo "${SVC_NAME} is not installed or SERVICE_HOME not set!"
@@ -67,9 +67,7 @@ fi
 # build classpath
 cd \$SERVICE_HOME/lib
 MYCLASSPATH=\$SERVICE_HOME/conf
-for JAR in `ls`; do
-    MYCLASSPATH=\$MYCLASSPATH:\$SERVICE_HOME/lib/\$JAR;
-done;
+MYCLASSPATH=\$MYCLASSPATH:\$SERVICE_HOME/lib/*
 MYCLASSPATH=\$MYCLASSPATH:.
 
 cd \$SERVICE_HOME

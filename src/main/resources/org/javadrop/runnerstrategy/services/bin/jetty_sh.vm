@@ -9,7 +9,7 @@
 #
 # Script designed to launch a jetty based service.
 #
-#set( $PID_FILE = "${PKG_INSTALL_LOC}/jetty.pid" )
+#set( $PID_FILE = "${PKG_INSTALL_LOC}/${PKG_NAME}.pid" )
 
 
 #set( $CLASSPATH = "")
@@ -61,11 +61,9 @@ if [ ! -f \$config_file ]; then
     exit 1
 fi
 
+# >= Java 1.6 (maybe 5?)
 CLASSPATH=.
-for lib in `ls lib/*.jar`
-do
-    CLASSPATH=\$CLASSPATH:\$lib
-done
+CLASSPATH=\$CLASSPATH:lib/*
 
 
 umask u=rwx,g=rwx,o=

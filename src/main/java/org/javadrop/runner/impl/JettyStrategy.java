@@ -99,7 +99,7 @@ public class JettyStrategy extends BaseRunnerStrategy {
 		installFiles.add(new File("runners" + File.separator + "env"));
 		installFiles.add(new File("runners" + File.separator + "jetty-spring.xml"));
 		installFiles.add(new File("runners" + File.separator + "log4j.xml"));
-		installFiles.add(new File("runners" + File.separator + "jetty-ebdefault.xml"));
+		installFiles.add(new File("runners" + File.separator + "jetty-webdefault.xml"));
 		installSet.put(new File("runners" + File.separator + "conf"), installFiles);
 
 		installFiles = new ArrayList<File>();

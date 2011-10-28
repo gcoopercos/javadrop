@@ -38,7 +38,7 @@ below properly.
 
 
 #if ( $JMX_PORT )
-    JAVA_OPTS="\$JAVA_OPTS -Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.port=${JMX_PORT} "
+JAVA_OPTS="\$JAVA_OPTS $APP_JAVA_OPTS -Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.port=${JMX_PORT} "
 #end
 
 if [ "$2" = "-x" ]; then
@@ -64,9 +64,9 @@ fi
 
 # build classpath
 # This is only designed for java >= 1.6 as it doesn't glue the jars together on the commandline anymore.
-cd \$APPHOME_HOME/lib
-MYCLASSPATH=\$SERVICE_HOME/conf
-MYCLASSPATH=\$MYCLASSPATH:\$APP_HOME/lib/\$JAR;
+cd \$APP_HOME/lib
+MYCLASSPATH=\$APP_HOME/conf
+MYCLASSPATH=\$MYCLASSPATH:\$APP_HOME/lib/*
 MYCLASSPATH=\$MYCLASSPATH:.
 
 cd \$APP_HOME
@@ -74,5 +74,5 @@ umask 022;
 
 touch $PID_FILE
 
-\$JAVA_EXEC \$JAVA_OPTS -cp \$MYCLASSPATH ${APP_MAIN_CLASS} &
-echo $!! > $PID_FILE
+\$JAVA_EXEC \$JAVA_OPTS -cp \$MYCLASSPATH ${APP_MAIN_CLASS} $@
+
