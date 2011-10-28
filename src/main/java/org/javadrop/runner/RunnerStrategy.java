@@ -32,7 +32,13 @@ import org.apache.maven.plugin.logging.Log;
  *
  */
 public interface RunnerStrategy {
-	
+    /**
+     * Returns a list of target artifacts to be renamed.
+     * @param workingDirectory Target directory where the artifacts live
+     * @return Mapping of old file -> new file of artifacts produced in the build.
+     */
+    Map<File, File> getArtifactRenames(File workingDirectory);
+    
 	/**
 	 * Provides a list of the names of the template files that this strategy needs converted. 
 	 * @return Map of source file -> destination file for velocity templates to process

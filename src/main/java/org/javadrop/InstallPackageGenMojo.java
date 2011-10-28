@@ -183,7 +183,11 @@ public class InstallPackageGenMojo extends AbstractMojo {
 		TemplateProcessor processor = new VelocityTemplateProcessorImpl(getLog());
 		for (PackagerStrategy packager : packagerStrategies) {
 			for (RunnerStrategy runner: runnerStrategies) {
+			    // Convert scripts
 				packager.processTemplates(runner, processor, workingDirectory);
+				
+				// Do mappings, renames, whatever in the runner.
+				packager.postProcessArtifacts(runner, workingDirectory);
 			}
 			packager.createPackage(packageDirectory, workingDirectory, runnerStrategies, getLog());
 		}

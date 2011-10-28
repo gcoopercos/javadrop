@@ -72,6 +72,16 @@ public interface PackagerStrategy {
 	 * @param log Logger used by the mojo
 	 */
 	void set_log(Log log);
+
+	/**
+	 * After templates have been processed it might also be desirable for the packager to
+	 * post-process artifacts of the build. This might include, but is not limited to, renaming
+	 * war files, moving files, etc...
+	 * 
+	 * @param runner The runner who's context the artifacts will be processed in.
+	 * @param workingDirectory Directory where the work is happening
+	 */
+    void postProcessArtifacts(RunnerStrategy runner, File workingDirectory);
 	
 }
 

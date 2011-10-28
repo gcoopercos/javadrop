@@ -31,6 +31,21 @@ import java.util.Map;
 public class JettyStrategy extends BaseRunnerStrategy {
 
     @Override
+    public Map<File, File> getArtifactRenames(File workingDirectory) {
+        HashMap<File,File> renameMap = new HashMap<File, File>();
+        
+        File warFile = getGenericWar(workingDirectory);
+        if (warFile == null) {
+            get_log().error("War file not available");
+        }
+        
+        renameMap.put(warFile, new File(workingDirectory.getAbsolutePath() + File.separator + "runners" + File.separator +
+                "war"+ File.separator + getTargetWarName()));
+        
+        return renameMap;
+    }
+    
+    @Override
     public Map<File, File> getConversionFiles(File outputDirectory) {
         Map<File, File> conversionFiles = new HashMap<File, File>(); // super.getConversionFiles(outputDirectory,
                                                                      // serviceName);
@@ -88,9 +103,8 @@ public class JettyStrategy extends BaseRunnerStrategy {
 		installSet.put(new File("runners" + File.separator + "conf"), installFiles);
 
 		installFiles = new ArrayList<File>();
-		File genWar = getGenericWar(workingDirectory);
-		if (genWar != null) installFiles.add(genWar);
-		installSet.put(new File("war"), installFiles);
+		installFiles.add(new File(getTargetWarName()));
+		installSet.put(new File("runners" + File.separator + "war"), installFiles);
 		 
 		return installSet;
 	}
@@ -118,7 +132,19 @@ public class JettyStrategy extends BaseRunnerStrategy {
         // Assign appropriate defaults to common variables
         runnerVariables.put("SVC_CONTEXT_NAME", "test-service-facade");
     }
+    
+    protected String getTargetWarName() {
+        return getWebContextName() + ".war";
+    }
 
+    protected String getWebContextName() {
+        String contextName = runnerVariables.get("JTY_CONTEXT_NAME");
+        if (contextName == null) {
+            get_log().error("Missing expected web context name - JTY_CONTEXT_NAME");
+        }
+        return contextName;
+    }
+    
     protected String getServiceName() {
         String jettyName = runnerVariables.get("JTY_NAME");
         if (jettyName == null) {

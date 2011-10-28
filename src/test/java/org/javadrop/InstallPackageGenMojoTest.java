@@ -217,7 +217,9 @@ public class InstallPackageGenMojoTest extends AbstractMojoTestCase {
      */
     @Test
     public void testJettyScriptCreation() throws Exception {
-        File testPom = getTestFile("src/test/resources/jetty_service_test_pom.xml");
+        createDummyWarFile();
+        
+    	File testPom = getTestFile("src/test/resources/jetty_service_test_pom.xml");
 
         InstallPackageGenMojo mojo;
         mojo = (InstallPackageGenMojo) lookupMojo("javadrop", testPom);
@@ -227,9 +229,15 @@ public class InstallPackageGenMojoTest extends AbstractMojoTestCase {
         mojo.execute();
 
         // Now analyze the directories for proper contents
-        jettyResults(1);
+        jettyResults(1,"jtytestsvc");
     }
 
+    private void createDummyWarFile() throws IOException {
+        // Simulate the creation of the war file by the build in the target directory
+//    	new File(scriptOutputDir.getAbsolutePath() + File.separator + "war").mkdirs();
+    	File dummyWarFile = new File(scriptOutputDir.getAbsolutePath() + File.separator + "jtytestsvc-1.0-SNAPSHOT.war");
+    	dummyWarFile.createNewFile();
+    }
     /**
      * Tests that a java application can be packaged up.
      * 
@@ -263,6 +271,8 @@ public class InstallPackageGenMojoTest extends AbstractMojoTestCase {
      */
     @Test
     public void testMultiScriptCreation() throws Exception {
+        createDummyWarFile();
+        
     	// Dummy up some java lib to go in the rpm
     	new File(scriptOutputDir.getAbsolutePath() + File.separator + "lib").mkdirs();
     	File dummyFile = new File(scriptOutputDir.getAbsolutePath() + File.separator + "lib/dummy.jar");
@@ -277,7 +287,7 @@ public class InstallPackageGenMojoTest extends AbstractMojoTestCase {
         mojo.setPackageDirectory(scriptOutputDir);
         mojo.execute();
 
-        jettyResults(2);
+        jettyResults(2, "jtestapp");
         javaAppResults(2);
     }
 
@@ -315,7 +325,7 @@ public class InstallPackageGenMojoTest extends AbstractMojoTestCase {
     }
     
     
-    private void jettyResults(int numRunScripts) throws IOException
+    private void jettyResults(int numRunScripts, String testPrefix) throws Exception
     {
         // Now analyze the directories for proper contents
         File folderFile = new File(getBasedir()
@@ -357,8 +367,11 @@ public class InstallPackageGenMojoTest extends AbstractMojoTestCase {
         contents = folderFile.listFiles();
         assertEquals(4, contents.length);
         fileResult = readFileAsString(getBasedir() + "/target/testdata/runners/conf/jetty-spring.xml");
-        assertTrue("Missing or incorrect test-service-facade context name", fileResult.contains("p:contextPath=\"/test-service-facade\" p:extractWAR="));
-        assertTrue("Missing or incorrect test-service-facade war name", fileResult.contains("p:war=\"war/test-service-facade.war\""));
+        assertTrue("Missing or incorrect test-service-facade context name", fileResult.contains("p:contextPath=\"/jtytestsvc\" p:extractWAR="));
+        assertTrue("Missing or incorrect test-service-facade war name", fileResult.contains("p:war=\"war/jtytestsvc.war\""));
+        File rpmFile = new File(getBasedir() + "/target/testdata/" + testPrefix + "-1.0-SNAPSHOT-1309218173.noarch.rpm");
+        
+        checkRPMFile(rpmFile, "jtytestsvc", "/usr/local/iovation/" + testPrefix + "/war/");
     }
     
     

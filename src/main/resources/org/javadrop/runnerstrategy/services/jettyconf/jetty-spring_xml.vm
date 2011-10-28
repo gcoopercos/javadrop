@@ -29,8 +29,8 @@
                     <property name="handlers">
                         <list>
                             <bean class="org.mortbay.jetty.webapp.WebAppContext"
-                                  p:contextPath="/${SVC_CONTEXT_NAME}" p:extractWAR="true"
-                                  p:war="war/${SVC_CONTEXT_NAME}.war"
+                                  p:contextPath="/${JTY_CONTEXT_NAME}" p:extractWAR="true"
+                                  p:war="war/${JTY_CONTEXT_NAME}.war"
                                   p:defaultsDescriptor="conf/jetty-webdefault.xml" p:tempDirectory="war/"/>
                         </list>
                     </property>

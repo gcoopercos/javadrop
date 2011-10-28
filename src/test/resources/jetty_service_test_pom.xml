@@ -45,7 +45,7 @@
 						<SVC_CACHE_ROOT>/cache</SVC_CACHE_ROOT>
 						<SVC_USER_ID>20</SVC_USER_ID>
 						<SVC_GROUP_ID>700</SVC_GROUP_ID>
-						<JTY_MAIN_CLASS>test.class</JTY_MAIN_CLASS>
+						<JTY_CONTEXT_NAME>jtytestsvc</JTY_CONTEXT_NAME>
 						<JTY_NAME>jtytestsvc</JTY_NAME>
 						<PKG_NAME>jtytestsvc</PKG_NAME>
 						<PKG_VERSION>1.0-SNAPSHOT</PKG_VERSION> <!--  project.version -->

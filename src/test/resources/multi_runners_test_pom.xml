@@ -39,6 +39,7 @@
 						<APP_NAME>jtestapp</APP_NAME>
 						<APP_MAIN_CLASS>test.class</APP_MAIN_CLASS>
 						<JTY_NAME>jtytestsvc</JTY_NAME>
+						<JTY_CONTEXT_NAME>jtytestsvc</JTY_CONTEXT_NAME>
 						<SVC_USER>testuser</SVC_USER>
 						<SVC_GROUP>ioapp</SVC_GROUP>
 						<SVC_ROOT>/usr/local/iovation</SVC_ROOT>
