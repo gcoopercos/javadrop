@@ -90,7 +90,7 @@ public class JettyStrategy extends BaseRunnerStrategy {
 		installFiles = new ArrayList<File>();
 		File genWar = getGenericWar(workingDirectory);
 		if (genWar != null) installFiles.add(genWar);
-		installSet.put(new File("runners" + File.separator + "war"), installFiles);
+		installSet.put(new File("war"), installFiles);
 		 
 		return installSet;
 	}
