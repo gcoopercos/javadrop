@@ -42,6 +42,9 @@ public class MainServiceStrategy extends BaseRunnerStrategy {
 		conversionFiles.put(new File(getPrefix() + File.separator + "init.d" + File.separator + "service_template_main.vm"),
 				new File(outputDirectory + File.separator + "runners" + File.separator + "init.d" + File.separator + getServiceName()));
 		
+		conversionFiles.put(new File("conf" + File.separator + getServiceName() + ".properties"),
+				new File(outputDirectory + File.separator + "runners" + File.separator + "conf" + File.separator + getServiceName() + ".properties"));
+
 		return conversionFiles;
 	}
 
@@ -51,10 +54,15 @@ public class MainServiceStrategy extends BaseRunnerStrategy {
 		Collection<File> installFiles = new ArrayList<File>();
 		installFiles.add(new File(getServiceName() + ".sh"));
 		installSet.put(new File("runners" + File.separator + "bin"), installFiles);
+
 		installFiles = new ArrayList<File>();
 		installFiles.add(new File(getServiceName()));
 		installSet.put(new File("runners" + File.separator + "init.d"), installFiles);
-		
+
+		installFiles = new ArrayList<File>();
+		installFiles.add(new File(getServiceName()+ ".properties"));
+		installSet.put(new File("runners" + File.separator + "conf"), installFiles);
+
 		return installSet;
 	}
 

@@ -25,6 +25,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
+import org.apache.velocity.exception.ResourceNotFoundException;
 
 /**
  * This uses velocity to process scripts.
@@ -77,6 +78,8 @@ public class VelocityTemplateProcessorImpl implements TemplateProcessor {
                     velContext, writer);
             writer.flush();
             writer.close();
+        } catch (ResourceNotFoundException rex) {
+            getLog().warn("Resource not found:" + inputTemplateFile.getAbsolutePath());
         } catch (Exception e) {
             getLog().error("Velocity processing problem", e);
             throw new MojoExecutionException(
