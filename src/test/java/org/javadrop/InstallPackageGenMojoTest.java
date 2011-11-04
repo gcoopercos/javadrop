@@ -235,7 +235,7 @@ public class InstallPackageGenMojoTest extends AbstractMojoTestCase {
     private void createDummyWarFile() throws IOException {
         // Simulate the creation of the war file by the build in the target directory
 //    	new File(scriptOutputDir.getAbsolutePath() + File.separator + "war").mkdirs();
-    	File dummyWarFile = new File(scriptOutputDir.getAbsolutePath() + File.separator + "jtytestsvc-1.0-SNAPSHOT.war");
+    	File dummyWarFile = new File(scriptOutputDir.getAbsolutePath() + File.separator + "jtytestsvc-1.0.war");
     	dummyWarFile.createNewFile();
     }
     /**
@@ -320,7 +320,7 @@ public class InstallPackageGenMojoTest extends AbstractMojoTestCase {
         }
         
         // Check to see if the rpm is there.
-        File rpmFile = new File(getBasedir() + "/target/testdata/jtestapp-1.0-SNAPSHOT-1309218173.noarch.rpm");
+        File rpmFile = new File(getBasedir() + "/target/testdata/jtestapp-1.0-1309218173.noarch.rpm");
         checkRPMFile(rpmFile, "dummy.jar", "/usr/local/iovation/jtestapp/lib/");
     }
     
@@ -369,7 +369,7 @@ public class InstallPackageGenMojoTest extends AbstractMojoTestCase {
         fileResult = readFileAsString(getBasedir() + "/target/testdata/runners/conf/jetty-spring.xml");
         assertTrue("Missing or incorrect test-service-facade context name", fileResult.contains("p:contextPath=\"/jtytestsvc\" p:extractWAR="));
         assertTrue("Missing or incorrect test-service-facade war name", fileResult.contains("p:war=\"war/jtytestsvc.war\""));
-        File rpmFile = new File(getBasedir() + "/target/testdata/" + testPrefix + "-1.0-SNAPSHOT-1309218173.noarch.rpm");
+        File rpmFile = new File(getBasedir() + "/target/testdata/" + testPrefix + "-1.0-1309218173.noarch.rpm");
         
         checkRPMFile(rpmFile, "jtytestsvc", "/usr/local/iovation/" + testPrefix + "/war/");
     }

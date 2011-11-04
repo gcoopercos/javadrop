@@ -77,7 +77,9 @@ public class RPMPackagerStrategy extends BasePackagerStrategy {
         task.setName(getRequiredParam("PKG_NAME"));
         task.setArchitecture("NOARCH");
         task.setLicense("proprietary");
-        task.setVersion(getRequiredParam("PKG_VERSION"));
+        // RPM has VERY SUBTLE and very bad behavior with text in the version.  It appears to work but doesn't upon
+        // rpm -e 
+        task.setVersion(getRequiredParam("PKG_VERSION").replaceFirst("-SNAPSHOT", ""));
         task.setRelease(getRequiredParam("PKG_RELEASE"));
         task.setGroup("Application/Office");
         task.setSourcePackage(getRequiredParam("PKG_NAME")
@@ -133,6 +135,15 @@ public class RPMPackagerStrategy extends BasePackagerStrategy {
 
         // Create the rpm
         task.execute();
+    }
+
+    /**
+     * Strips the '-SNAPSHOT' text from a string
+     * @param snapshotStr String that MAY have '-SNAPSHOT' inside of it
+     * @return The string with -SNAPSHOT removed
+     */
+    private String snapshotStripped(String requiredParam) {
+        return requiredParam.replaceFirst("-SNAPSHOT", "");
     }
 
     /**
