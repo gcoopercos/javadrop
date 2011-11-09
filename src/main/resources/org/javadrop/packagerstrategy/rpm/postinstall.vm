@@ -10,7 +10,7 @@ Variables used
    PKG_INSTALL_LOC
 *#
 
-#set( $SERV_LOG = "$PKG_INSTALL_LOC/log/$PKG_NAME" )
+#set( $SERV_LOG = "$PKG_INSTALL_LOC/log/" )
 #set( $PKG_CACHE_ROOT = "$PKG_INSTALL_LOC/cache" )
 
 # mod or script so they have the execute bit set
