@@ -37,10 +37,10 @@ public class JettyStrategy extends BaseRunnerStrategy {
         File warFile = getGenericWar(workingDirectory);
         if (warFile == null) {
             get_log().error("War file not available");
+        } else {
+            renameMap.put(warFile, new File(workingDirectory.getAbsolutePath() + File.separator + "runners" + File.separator +
+                    "war"+ File.separator + getTargetWarName()));
         }
-        
-        renameMap.put(warFile, new File(workingDirectory.getAbsolutePath() + File.separator + "runners" + File.separator +
-                "war"+ File.separator + getTargetWarName()));
         
         return renameMap;
     }
@@ -118,6 +118,17 @@ public class JettyStrategy extends BaseRunnerStrategy {
                 return dfile;
             }
         }
+        
+        // Next check the lib directory as that's where maven dependencies will be placed (double ugh)
+        File libDir = new File(workingDirectory.getAbsolutePath() + File.separator + "lib");
+        dirfiles = libDir.listFiles();
+        for (File dfile : dirfiles) {
+            if (dfile.getName().contains(".war")) {
+                return dfile;
+            }
+        }
+        
+        
         return null;
 	}
 
