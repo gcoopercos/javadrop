@@ -365,7 +365,7 @@ public class InstallPackageGenMojoTest extends AbstractMojoTestCase {
         
         folderFile = new File(getBasedir() + "/target/testdata/runners/conf");
         contents = folderFile.listFiles();
-        assertEquals(4, contents.length);
+        assertEquals(5, contents.length);
         fileResult = readFileAsString(getBasedir() + "/target/testdata/runners/conf/jetty-spring.xml");
         assertTrue("Missing or incorrect test-service-facade context name", fileResult.contains("p:contextPath=\"/jtytestsvc\" p:extractWAR="));
         assertTrue("Missing or incorrect test-service-facade war name", fileResult.contains("p:war=\"war/jtytestsvc.war\""));

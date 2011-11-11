@@ -80,6 +80,9 @@ public class JettyStrategy extends BaseRunnerStrategy {
                 outputDirectory + File.separator + "runners" + File.separator
                         + "conf" + File.separator + "jetty-webdefault.xml"));
 
+        conversionFiles.put(new File("conf" + File.separator + getServiceName() + ".properties"),
+                new File(outputDirectory + File.separator + "runners" + File.separator + "conf" + File.separator + getServiceName() + ".properties"));
+
         return conversionFiles;
     }
 
@@ -104,6 +107,7 @@ public class JettyStrategy extends BaseRunnerStrategy {
 
 		installFiles = new ArrayList<File>();
 		installFiles.add(new File(getTargetWarName()));
+        installFiles.add(new File(getServiceName()+ ".properties"));
 		installSet.put(new File("runners" + File.separator + "war"), installFiles);
 		 
 		return installSet;
