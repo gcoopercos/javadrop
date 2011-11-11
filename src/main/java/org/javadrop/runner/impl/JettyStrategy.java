@@ -103,11 +103,11 @@ public class JettyStrategy extends BaseRunnerStrategy {
 		installFiles.add(new File("runners" + File.separator + "jetty-spring.xml"));
 		installFiles.add(new File("runners" + File.separator + "log4j.xml"));
 		installFiles.add(new File("runners" + File.separator + "jetty-webdefault.xml"));
+        installFiles.add(new File(getServiceName()+ ".properties"));
 		installSet.put(new File("runners" + File.separator + "conf"), installFiles);
 
 		installFiles = new ArrayList<File>();
 		installFiles.add(new File(getTargetWarName()));
-        installFiles.add(new File(getServiceName()+ ".properties"));
 		installSet.put(new File("runners" + File.separator + "war"), installFiles);
 		 
 		return installSet;
