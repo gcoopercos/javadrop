@@ -73,15 +73,21 @@ public class JettyStrategy extends BaseRunnerStrategy {
         conversionFiles.put(new File(getPrefix() + File.separator + "jettyconf"
                 + File.separator + "log4j_xml.vm"), new File(outputDirectory
                 + File.separator + "runners" + File.separator + "conf"
-                + File.separator + "log4j.xml"));
+                + File.separator + getServiceName() + "-log4j.xml"));
 
         conversionFiles.put(new File(getPrefix() + File.separator + "jettyconf"
                 + File.separator + "jetty-webdefault.xml"), new File(
                 outputDirectory + File.separator + "runners" + File.separator
                         + "conf" + File.separator + "jetty-webdefault.xml"));
 
+        // Grabs the properties file from the classpath. conf/[servicename].properties
         conversionFiles.put(new File("conf" + File.separator + getServiceName() + ".properties"),
                 new File(outputDirectory + File.separator + "runners" + File.separator + "conf" + File.separator + getServiceName() + ".properties"));
+        
+        // Grabs the log4j from the claspath
+        conversionFiles.put(new File("conf" + File.separator + getServiceName() + "-log4j.xml"),
+                new File(outputDirectory + File.separator + "runners" + File.separator + "conf" + File.separator + 
+                        getServiceName() + "-log4j.xml"));
 
         return conversionFiles;
     }
@@ -101,7 +107,7 @@ public class JettyStrategy extends BaseRunnerStrategy {
 		installFiles = new ArrayList<File>();
 		installFiles.add(new File("runners" + File.separator + "env"));
 		installFiles.add(new File("runners" + File.separator + "jetty-spring.xml"));
-		installFiles.add(new File("runners" + File.separator + "log4j.xml"));
+		installFiles.add(new File(getServiceName() + "-log4j.xml"));
 		installFiles.add(new File("runners" + File.separator + "jetty-webdefault.xml"));
         installFiles.add(new File(getServiceName()+ ".properties"));
 		installSet.put(new File("runners" + File.separator + "conf"), installFiles);
