@@ -152,6 +152,7 @@ public class JettyStrategy extends BaseRunnerStrategy {
 
         // Assign appropriate defaults to common variables
         runnerVariables.put("SVC_CONTEXT_NAME", "test-service-facade");
+        runnerVariables.put("JTY_WEB_PORT", "8080");
     }
     
     protected String getTargetWarName() {

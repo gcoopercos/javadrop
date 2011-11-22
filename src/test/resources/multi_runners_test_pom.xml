@@ -52,6 +52,7 @@
 						<PKG_NAME>jtestapp</PKG_NAME>
 						<PKG_VERSION>1.0-SNAPSHOT</PKG_VERSION> <!-- project.version -->
 						<PKG_RELEASE>1309218173</PKG_RELEASE> <!-- build.version -->
+                        <JTY_WEB_PORT>9000</JTY_WEB_PORT>
 					</javadropVariables>
 				</configuration>
 			</plugin>

@@ -41,7 +41,7 @@
         </property>
     </bean>
 
-    <bean id="nio" class="org.mortbay.jetty.nio.SelectChannelConnector" p:port="8080" p:maxIdleTime="5000"
+    <bean id="nio" class="org.mortbay.jetty.nio.SelectChannelConnector" p:port="${JTY_WEB_PORT}" p:maxIdleTime="5000"
           p:acceptors="2" p:statsOn="false" p:lowResourcesConnections="5000"
           p:lowResourcesMaxIdleTime="5000"/>
 

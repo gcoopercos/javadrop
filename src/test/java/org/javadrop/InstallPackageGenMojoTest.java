@@ -230,6 +230,13 @@ public class InstallPackageGenMojoTest extends AbstractMojoTestCase {
 
         // Now analyze the directories for proper contents
         jettyResults(1,"jtytestsvc");
+        
+        // Check for web port default of 8080
+        String fileResult = readFileAsString(getBasedir() + "/target/testdata/runners/conf/jetty-spring.xml");
+        assertTrue("Missing or incorrect web port number", 
+                fileResult.contains("SelectChannelConnector\" p:port=\"8080\""));
+
+        
     }
 
     private void createDummyWarFile() throws IOException {
@@ -289,6 +296,11 @@ public class InstallPackageGenMojoTest extends AbstractMojoTestCase {
 
         jettyResults(2, "jtestapp");
         javaAppResults(2);
+        // Check for web port default of 8080
+        String fileResult = readFileAsString(getBasedir() + "/target/testdata/runners/conf/jetty-spring.xml");
+        assertTrue("Missing or incorrect web port number", 
+                fileResult.contains("SelectChannelConnector\" p:port=\"9000\""));
+
     }
 
     private void javaAppResults(int numRunScripts) throws Exception
