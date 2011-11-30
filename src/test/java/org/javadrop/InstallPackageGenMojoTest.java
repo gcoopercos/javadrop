@@ -170,8 +170,8 @@ public class InstallPackageGenMojoTest extends AbstractMojoTestCase {
     public void testStandAloneScriptCreation() throws Exception {
         File testPom = getTestFile("src/test/resources/service_test_pom.xml");
 
-        InstallPackageGenMojo mojo;
-        mojo = (InstallPackageGenMojo) lookupMojo("javadrop", testPom);
+        JavadropMojo mojo;
+        mojo = (JavadropMojo) lookupMojo("javadrop", testPom);
         assertNotNull(mojo);
         mojo.setWorkingDirectory(scriptOutputDir);
         mojo.setPackageDirectory(scriptOutputDir);
@@ -221,8 +221,8 @@ public class InstallPackageGenMojoTest extends AbstractMojoTestCase {
         
     	File testPom = getTestFile("src/test/resources/jetty_service_test_pom.xml");
 
-        InstallPackageGenMojo mojo;
-        mojo = (InstallPackageGenMojo) lookupMojo("javadrop", testPom);
+        JavadropMojo mojo;
+        mojo = (JavadropMojo) lookupMojo("javadrop", testPom);
         assertNotNull(mojo);
         mojo.setWorkingDirectory(scriptOutputDir);
         mojo.setPackageDirectory(scriptOutputDir);
@@ -259,8 +259,8 @@ public class InstallPackageGenMojoTest extends AbstractMojoTestCase {
     	
         File testPom = getTestFile("src/test/resources/java_app_test_pom.xml");
 
-        InstallPackageGenMojo mojo;
-        mojo = (InstallPackageGenMojo) lookupMojo("javadrop", testPom);
+        JavadropMojo mojo;
+        mojo = (JavadropMojo) lookupMojo("javadrop", testPom);
         assertNotNull(mojo);
         mojo.setWorkingDirectory(scriptOutputDir);
         mojo.setPackageDirectory(scriptOutputDir);
@@ -287,8 +287,8 @@ public class InstallPackageGenMojoTest extends AbstractMojoTestCase {
     	
         File testPom = getTestFile("src/test/resources/multi_runners_test_pom.xml");
 
-        InstallPackageGenMojo mojo;
-        mojo = (InstallPackageGenMojo) lookupMojo("javadrop", testPom);
+        JavadropMojo mojo;
+        mojo = (JavadropMojo) lookupMojo("javadrop", testPom);
         assertNotNull(mojo);
         mojo.setWorkingDirectory(scriptOutputDir);
         mojo.setPackageDirectory(scriptOutputDir);

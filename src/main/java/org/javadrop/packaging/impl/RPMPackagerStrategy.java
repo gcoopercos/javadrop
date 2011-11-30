@@ -69,7 +69,8 @@ public class RPMPackagerStrategy extends BasePackagerStrategy {
             throw new MojoExecutionException("'packagerDirectory' is null");
         }
         Project project = new Project();
-        project.setCoreLoader(getClass().getClassLoader());
+        //project.setCoreLoader(getClass().getClassLoader());
+        project.setCoreLoader(ClassLoader.getSystemClassLoader());
         project.init();
         RedlineTask task = new RedlineTask();
         task.setProject(project);

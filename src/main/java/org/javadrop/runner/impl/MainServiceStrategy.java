@@ -45,6 +45,11 @@ public class MainServiceStrategy extends BaseRunnerStrategy {
 		conversionFiles.put(new File("conf" + File.separator + getServiceName() + ".properties"),
 				new File(outputDirectory + File.separator + "runners" + File.separator + "conf" + File.separator + getServiceName() + ".properties"));
 
+        // Grabs the log4j from the claspath
+        conversionFiles.put(new File("conf" + File.separator + getServiceName() + "-log4j.xml"),
+                new File(outputDirectory + File.separator + "runners" + File.separator + "conf" + File.separator + 
+                        getServiceName() + "-log4j.xml"));
+        
 		return conversionFiles;
 	}
 
@@ -61,7 +66,13 @@ public class MainServiceStrategy extends BaseRunnerStrategy {
 
 		installFiles = new ArrayList<File>();
 		installFiles.add(new File(getServiceName()+ ".properties"));
+        installFiles.add(new File(getServiceName() + "-log4j.xml"));
 		installSet.put(new File("runners" + File.separator + "conf"), installFiles);
+
+        // Lib files
+        Collection<File> libFiles = getDirFiles(new File(workingDirectory.getAbsolutePath() + File.separator + "lib"));
+        if (libFiles.size() > 0) installSet.put(new File("lib"), libFiles);
+            
 
 		return installSet;
 	}

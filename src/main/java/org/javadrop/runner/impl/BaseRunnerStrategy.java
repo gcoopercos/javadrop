@@ -16,6 +16,7 @@
 package org.javadrop.runner.impl;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -103,6 +104,26 @@ public abstract class BaseRunnerStrategy implements RunnerStrategy {
 
     }
 
+    /**
+     * Get a bunch of files from a given directory. Generally used to grab a set of generated files (libraries, e.g.)
+     * @param dir Directory to grab the files from
+     * @return Collection of files.
+     */
+    protected Collection<File> getDirFiles(File dir) {
+        
+        ArrayList<File> fileList = new ArrayList<File>();
+
+        File [] dirList = dir.listFiles();
+        if (dirList == null) {
+            get_log().warn("Directory is missing or empty: " + dir.getAbsolutePath());
+            return fileList;
+        }
+        for (File file : dirList) {
+            fileList.add(file);
+        }
+        return fileList;
+    }
+    
     @Override
     public void set_log(Log _log) {
         this._log = _log;

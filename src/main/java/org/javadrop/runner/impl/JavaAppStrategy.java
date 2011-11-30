@@ -60,21 +60,6 @@ public class JavaAppStrategy extends BaseRunnerStrategy {
 		return runnerVariables.get("APP_NAME");
 	}
 
-	private Collection<File> getDirFiles(File dir) {
-		
-		ArrayList<File> fileList = new ArrayList<File>();
-
-		File [] dirList = dir.listFiles();
-		if (dirList == null) {
-			get_log().warn("Directory is missing or empty: " + dir.getAbsolutePath());
-			return fileList;
-		}
-		for (File file : dirList) {
-			fileList.add(file);
-		}
-		return fileList;
-	}
-	
 	
 	@Override
 	protected void applyDefaults() {
