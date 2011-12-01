@@ -70,7 +70,11 @@ public class MainServiceStrategy extends BaseRunnerStrategy {
 		installSet.put(new File("runners" + File.separator + "conf"), installFiles);
 
         // Lib files
-        Collection<File> libFiles = getDirFiles(new File(workingDirectory.getAbsolutePath() + File.separator + "lib"));
+        Collection<File> libFiles = getDirFiles(new File(workingDirectory.getAbsolutePath() + File.separator + "lib"),
+                new JarFilenameFilter());
+        Collection<File> buildFiles = getDirFiles(new File(workingDirectory.getAbsolutePath()),
+                new JarFilenameFilter());
+        libFiles.addAll(buildFiles);
         if (libFiles.size() > 0) installSet.put(new File("lib"), libFiles);
             
 

@@ -16,6 +16,7 @@
 package org.javadrop.runner.impl;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -50,7 +51,9 @@ public class JavaAppStrategy extends BaseRunnerStrategy {
 		installSet.put(new File("runners" + File.separator + "bin"), installFiles);
 
 		// Lib files
-		Collection<File> libFiles = getDirFiles(new File(workingDirectory.getAbsolutePath() + File.separator + "lib"));
+		Collection<File> libFiles = getDirFiles(new File(workingDirectory.getAbsolutePath() + File.separator + "lib"),
+		        new JarFilenameFilter());
+
 		if (libFiles.size() > 0) installSet.put(new File("lib"), libFiles);
 			
 		return installSet;
@@ -59,7 +62,6 @@ public class JavaAppStrategy extends BaseRunnerStrategy {
 	protected String getAppName() {
 		return runnerVariables.get("APP_NAME");
 	}
-
 	
 	@Override
 	protected void applyDefaults() {
