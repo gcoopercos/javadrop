@@ -93,7 +93,12 @@ public abstract class BasePackagerStrategy  implements PackagerStrategy {
 		templateParameters.putAll(runner.getParameters());
 		conversionFiles.putAll(getConversionFiles(workingDirectory, runner));
 		for (Entry<File, File> cfile : conversionFiles.entrySet()) {
-			processor.applyVTemplate(cfile.getKey(), cfile.getValue(), templateParameters);
+		    // TODO - Quick and dirty fix to support copying binaries around
+		    if (cfile.getKey().getName().toLowerCase().endsWith("jar")) {
+		        cfile.getKey().renameTo(cfile.getValue());
+		    } else {
+		        processor.applyVTemplate(cfile.getKey(), cfile.getValue(), templateParameters);
+		    }
 		}
 	}
 
