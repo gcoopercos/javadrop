@@ -81,6 +81,7 @@ public class MainServiceStrategy extends BaseRunnerStrategy {
 	protected void applyDefaults() {
 		super.applyDefaults();
 		requiredVariables.add("SVC_MAIN_CLASS");
+        runnerVariables.put("PKG_STANDALONE", getServiceName());
 	}
 	
 	private String getPrefix() {

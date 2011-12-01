@@ -28,7 +28,7 @@ velocity context.
 #set( $serviceparam = "" )
 
 RETVAL=0
-serviceparam=$3
+serviceparam=${PKG_STANDALONE}
 
 MY_SCRIPT="${PKG_INSTALL_LOC}/bin/${SVC_NAME}.sh"
 MY_WEB_SCRIPT="${PKG_INSTALL_LOC}/bin/${JTY_NAME}.sh"
