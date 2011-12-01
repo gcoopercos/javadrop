@@ -169,7 +169,14 @@ public class InstallPackageGenMojoTest extends AbstractMojoTestCase {
     @Test
     public void testStandAloneScriptCreation() throws Exception {
         File testPom = getTestFile("src/test/resources/service_test_pom.xml");
+        // Dummy up some java lib to go in the rpm
+        new File(scriptOutputDir.getAbsolutePath() + File.separator + "lib").mkdirs();
+        File dummyFile = new File(scriptOutputDir.getAbsolutePath() + File.separator + "lib/dummy.jar");
+        dummyFile.createNewFile();
 
+        File dummyBuildJar = new File(scriptOutputDir.getAbsolutePath() + File.separator + "dummyartifact.jar");
+        dummyBuildJar.createNewFile();
+        
         JavadropMojo mojo;
         mojo = (JavadropMojo) lookupMojo("javadrop", testPom);
         assertNotNull(mojo);
@@ -206,6 +213,9 @@ public class InstallPackageGenMojoTest extends AbstractMojoTestCase {
         for (File fileContent : contents) {
             assertTrue(fileSet.contains(fileContent.getName()));
         }
+        File rpmFile = new File(getBasedir() + "/target/testdata/testservice-1.0-1309218173.noarch.rpm");
+        checkRPMFile(rpmFile, "dummy.jar", "/usr/local/iovation/testservice/lib/");
+        checkRPMFile(rpmFile, "dummyartifact.jar", "/usr/local/iovation/testservice/lib/");
     }
 
     /**
@@ -284,9 +294,11 @@ public class InstallPackageGenMojoTest extends AbstractMojoTestCase {
     	new File(scriptOutputDir.getAbsolutePath() + File.separator + "lib").mkdirs();
     	File dummyFile = new File(scriptOutputDir.getAbsolutePath() + File.separator + "lib/dummy.jar");
     	dummyFile.createNewFile();
-    	
-        File testPom = getTestFile("src/test/resources/multi_runners_test_pom.xml");
 
+    	File dummyBuildJar = new File(scriptOutputDir.getAbsolutePath() + File.separator + "dummyartifact.jar");
+        File testPom = getTestFile("src/test/resources/multi_runners_test_pom.xml");
+        dummyBuildJar.createNewFile();
+        
         JavadropMojo mojo;
         mojo = (JavadropMojo) lookupMojo("javadrop", testPom);
         assertNotNull(mojo);

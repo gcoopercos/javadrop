@@ -50,6 +50,14 @@ public class MainServiceStrategy extends BaseRunnerStrategy {
                 new File(outputDirectory + File.separator + "runners" + File.separator + "conf" + File.separator + 
                         getServiceName() + "-log4j.xml"));
         
+        // Grabs artifacts and puts them in lib
+        Collection<File> buildFiles = getDirFiles(outputDirectory,
+                new JarFilenameFilter());
+        for (File artifact : buildFiles) {
+            conversionFiles.put(artifact,
+                    new File(outputDirectory + File.separator + "lib" + File.separator + artifact.getName()));
+        }
+
 		return conversionFiles;
 	}
 
@@ -72,9 +80,6 @@ public class MainServiceStrategy extends BaseRunnerStrategy {
         // Lib files
         Collection<File> libFiles = getDirFiles(new File(workingDirectory.getAbsolutePath() + File.separator + "lib"),
                 new JarFilenameFilter());
-        Collection<File> buildFiles = getDirFiles(new File(workingDirectory.getAbsolutePath()),
-                new JarFilenameFilter());
-        libFiles.addAll(buildFiles);
         if (libFiles.size() > 0) installSet.put(new File("lib"), libFiles);
             
 
@@ -86,6 +91,7 @@ public class MainServiceStrategy extends BaseRunnerStrategy {
 		super.applyDefaults();
 		requiredVariables.add("SVC_MAIN_CLASS");
         runnerVariables.put("PKG_STANDALONE", getServiceName());
+        runnerVariables.put("JTY_NAME", "notused");
 	}
 	
 	private String getPrefix() {
