@@ -23,6 +23,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.channels.Channels;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.maven.plugin.testing.AbstractMojoTestCase;
@@ -159,6 +161,15 @@ public class InstallPackageGenMojoTest extends AbstractMojoTestCase {
 //        assertNull(contents);
 //    }
 
+    public void testNestedAnnotations() throws Exception {
+        File testPom = getTestFile("src/test/resources/pom_scoped_runners.xml");
+        JavadropMojo mojo;
+        mojo = (JavadropMojo) lookupMojo("javadrop", testPom);
+        assertNotNull(mojo);
+        List<RunnerDefinition> rdefs = mojo.getRunnerDefinitions();
+        assertEquals("Checking number of runners", 2, rdefs.size());
+    }
+    
     /**
      * This does a basic sanity check to see that the directory structure is
      * correct. It currently does not go into details with determining what the

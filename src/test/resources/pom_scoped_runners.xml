@@ -21,28 +21,42 @@
                 </executions>
                 <configuration>
                     <runnerDefinitions>
-                        <runnerDefinition>
-                            <runnerClass>org.javadrop.runner.impl.MainServiceStrategy
+                        <RunnerDefinition>
+                            <runnerClass>org.javadrop.runner.impl.JavaAppStrategy
                             </runnerClass>
                             <runnerParameters>
-                                <SVC_NAME>testservice</SVC_NAME>
-                                <SVC_USER>testuser</SVC_USER>
-                                <SVC_GROUP>ioapp</SVC_GROUP>
-                                <SVC_MAIN_CLASS>test.class</SVC_MAIN_CLASS>
+                                <APP_MAIN_CLASS>test.class
+                                </APP_MAIN_CLASS>
+                                <APP_NAME>jtestapp</APP_NAME>
+                                <JMX_PORT>1093</JMX_PORT>
+                                <APP_MAIN_CLASS>test.class
+                                </APP_MAIN_CLASS>
+                                <APP_NAME>jtestapp</APP_NAME>
                             </runnerParameters>
-                        </runnerDefinition>
+                        </RunnerDefinition>
+                        <RunnerDefinition>
+                            <runnerClass>org.javadrop.runner.impl.NewTestStrategy
+                            </runnerClass>
+                            <runnerParameters>
+                                <APP_MAIN_CLASS>test2.class
+                                </APP_MAIN_CLASS>
+                                <APP_NAME>jtestapp2</APP_NAME>
+                            </runnerParameters>
+                        </RunnerDefinition>
                     </runnerDefinitions>
-                    
+
                     <packagerDefinitions>
                         <packagerDefinition>
-                            <packagerClass>org.javadrop.packaging.impl.RPMPackagerStrategy</packagerClass>
-                            <!-- serivceType left out for testing -->
+                            <packagerClass>org.javadrop.packaging.impl.RPMPackagerStrategy
+                            </packagerClass>
                             <packagerParameters>
-                                <PKG_NAME>testservice</PKG_NAME>
-                                <PKG_INSTALL_LOC>/usr/local/iovation/testservice
-                                </PKG_INSTALL_LOC>
                                 <USER_ID>20</USER_ID>
                                 <GROUP_ID>700</GROUP_ID>
+                                <RUNNER_USER>testuser</RUNNER_USER>
+                                <RUNNER_GROUP>ioapp</RUNNER_GROUP>
+                                <PKG_INSTALL_LOC>/usr/local/iovation/jtestapp
+                                </PKG_INSTALL_LOC>
+                                <PKG_NAME>jtestapp</PKG_NAME>
                                 <PKG_VERSION>1.0-SNAPSHOT</PKG_VERSION> <!-- project.version -->
                                 <PKG_RELEASE>1309218173</PKG_RELEASE> <!-- build.version -->
                             </packagerParameters>

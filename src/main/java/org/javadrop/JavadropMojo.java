@@ -22,7 +22,6 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import javax.management.IntrospectionException;
 
@@ -49,48 +48,36 @@ public class JavadropMojo extends AbstractMojo {
     protected MavenProject mavenProject;
 
     /**
-     * Specify the name of the packager strategies.
+     * Defines the runners that may be packaged up to bundle the software
      * 
      * @parameter
      * @required
      */
-    private List<String> packagerClasses;
-
+    private List<RunnerDefinition> runnerDefinitions;
+    
+    
     /**
-     * 
-     * Specify the name of the runner strategy. The actual strategy is looked
-     * up. <runners> <param>runner_name1</param> <param>runner_name2</parma>
-     * </runners>
+     * Defines the packagers that are used to build the software distribution archive.
      * 
      * @parameter
      * @required
      */
-    private List<String> runnerClasses;
+    private List<PackagerDefinition> packagerDefinitions;
+    
 
     /**
-     * Runner strategies.
+     * Runner strategies. Once the pom has been configured, these are the actual functionality that does the work
+     * for the defined runners.
      */
     private List<RunnerStrategy> runnerStrategies = new LinkedList<RunnerStrategy>();
 
     /**
-     * Packager strategies.
+     * Packager strategies. The actual packager functionality is found here.
      */
     private List<PackagerStrategy> packagerStrategies = new LinkedList<PackagerStrategy>();
 
     public JavadropMojo() {
     }
-
-    // private static final String SERVICE_NAME_VAR = "SVC_NAME";
-    //
-    /**
-     * This gets populated from the variables/parameters in the pom. These are
-     * processed by the runners and packagers. The "mojo" does nothing with them
-     * directly.
-     * 
-     * @parameter
-     * @required
-     */
-    private Map<String, String> javadropVariables;
 
     /**
      * Location of the output directory for the template results.
@@ -112,46 +99,6 @@ public class JavadropMojo extends AbstractMojo {
      */
     private File packageDirectory;
 
-    // /**
-    // * What is the type of the target service?
-    // *
-    // * @parameter
-    // * @required
-    // */
-    // private String serviceType;
-    //
-    // /**
-    // * The velocity context provides template substitution parameters. It is
-    // essentially
-    // * how the variables get replaced in the templates. This plugin acts as
-    // the glue
-    // * between this velocity context and the template result itself.
-    // */
-    // private VelocityContext velContext = new VelocityContext();
-    //
-    // /**
-    // * This strategy defines how the target service type will require and use
-    // provided parameters
-    // * from the pom.
-    // */
-    // private IRunnerStrategy serviceStrategy;
-
-    // public InstallPackageGenMojo()
-    // {
-    // mergedVariables = new HashMap<String, String>();
-    // mergedVariables.put("SVC_ROOT", "/usr/local/iovation");
-    // mergedVariables.put("SVC_LOGROOT", "/var/log/iovation");
-    // mergedVariables.put("SVC_REDIS_LOG_ROOT", "/var/log/redis");
-    // mergedVariables.put("SVC_CACHE_ROOT", "/cache");
-    // mergedVariables.put("BUILTIN_JAVA_OPTS",
-    // "-Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.port=1099 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false");
-    // requiredVariables.add("SVC_USER");
-    // requiredVariables.add("SVC_USER_ID");
-    // requiredVariables.add("SVC_GROUP");
-    // requiredVariables.add("SVC_GROUP_ID");
-    // requiredVariables.add("SVC_MAIN_CLASS");
-    // requiredVariables.add("SVC_NAME");
-    // }
 
     public void setPackageDirectory(File packageDirectory) {
         this.packageDirectory = packageDirectory;
@@ -192,15 +139,6 @@ public class JavadropMojo extends AbstractMojo {
             getLog().warn(e);
         }
 
-        // Apply the mojo's parameters to the runners and packagers so they know
-        // how to process templates.
-        for (RunnerStrategy runner : runnerStrategies) {
-            runner.applyParameters(javadropVariables);
-        }
-        for (PackagerStrategy packager : packagerStrategies) {
-            packager.applyParameters(javadropVariables);
-        }
-
         // Process runner scripts in the context of a packager.
         TemplateProcessor processor = new VelocityTemplateProcessorImpl(
                 getLog());
@@ -237,8 +175,8 @@ public class JavadropMojo extends AbstractMojo {
     }
 
     /**
-     * Create the strategy objects from the given strategy class names specified
-     * in the POM.
+     * This creates the actual strategies used to do the work. It maps the parameters
+     * found in the pom to the code that will be chugging away.
      * 
      * @throws ClassNotFoundException
      *             If given class name isn't available
@@ -250,21 +188,34 @@ public class JavadropMojo extends AbstractMojo {
     private void initStrategies() throws ClassNotFoundException,
             InstantiationException, IllegalAccessException {
         ClassLoader classLoader = getClass().getClassLoader();
-
-        for (String runnerClass : runnerClasses) {
+        
+        for (RunnerDefinition runnerDef : runnerDefinitions) {
+            String runnerClass = runnerDef.getRunnerClass();
             Class<?> aClass = classLoader.loadClass(runnerClass);
             RunnerStrategy runnerStrat = (RunnerStrategy) aClass.newInstance();
+            // Apply the mojo's parameters to the strategy so it knows how to
+            // process templates.
+            runnerStrat.applyParameters(runnerDef.getRunnerParameters());
             runnerStrat.set_log(getLog());
             runnerStrategies.add(runnerStrat);
         }
 
-        for (String packagerClass : packagerClasses) {
+        for (PackagerDefinition packagerDef : packagerDefinitions) {
+            String packagerClass = packagerDef.getPackagerClass();
             Class<?> aClass = classLoader.loadClass(packagerClass);
             PackagerStrategy packagerStrat = (PackagerStrategy) aClass
-                    .newInstance();
+                    .newInstance(); 
+            // Apply the mojo's parameters to the strategyso it knows how to
+            // process templates.
+            packagerStrat.applyParameters(packagerDef.getPackagerParameters());
             packagerStrat.set_log(getLog());
             packagerStrategies.add(packagerStrat);
         }
+    }
+
+
+    public List<RunnerDefinition> getRunnerDefinitions() {
+        return runnerDefinitions;
     }
 
     /**
