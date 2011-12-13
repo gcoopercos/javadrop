@@ -45,7 +45,7 @@ if [ "$2" = "-x" ]; then
     JAVA_OPTS="\$JAVA_OPTS $2";
 fi
 
-if [ "\$APP_HOME"="" ]; then
+if [ "\$APP_HOME" = "" ]; then
     APP_HOME=${PKG_INSTALL_LOC};
 fi
 if [ ! -d \$APP_HOME ]; then
