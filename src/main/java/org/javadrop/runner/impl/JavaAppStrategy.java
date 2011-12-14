@@ -22,56 +22,62 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-
-
 /**
  * This implementation of the runner strategy is designed to support stand-alone
  * java client programs that have their own 'main(..)'.
  * 
  * @author gcooperpdx
- *
+ * 
  */
 public class JavaAppStrategy extends BaseRunnerStrategy {
-	
-	@Override
-	public Map<File, File> getConversionFiles(File outputDirectory) {
-		Map<File,File> conversionFiles = new HashMap<File, File>(); //super.getConversionFiles(outputDirectory, serviceName);
 
-		conversionFiles.put(new File(getPrefix() + File.separator + "bin" + File.separator + "java_app_sh.vm"),
-				new File(outputDirectory + File.separator + "runners" + File.separator + "bin" + File.separator + getAppName() + ".sh"));
-		
-		return conversionFiles;
-	}
+    @Override
+    public Map<File, File> getConversionFiles(File outputDirectory) {
+        Map<File, File> conversionFiles = new HashMap<File, File>(); // super.getConversionFiles(outputDirectory,
+                                                                     // serviceName);
 
-	@Override
-	public Map<File, Collection<File>> getInstallSet(File workingDirectory) {
-		Map<File, Collection<File>> installSet = super.getInstallSet(workingDirectory);
-		Collection<File> installFiles = new ArrayList<File>();
-		installFiles.add(new File(getAppName() + ".sh"));
-		installSet.put(new File("runners" + File.separator + "bin"), installFiles);
+        conversionFiles.put(new File(getPrefix() + File.separator + "bin"
+                + File.separator + "java_app_sh.vm"), new File(outputDirectory
+                + File.separator + "runners" + File.separator + "bin"
+                + File.separator + getAppName() + ".sh"));
 
-		// Lib files
-		Collection<File> libFiles = getDirFiles(new File(workingDirectory.getAbsolutePath() + File.separator + "lib"),
-		        new JarFilenameFilter());
+        return conversionFiles;
+    }
 
-		if (libFiles.size() > 0) installSet.put(new File("lib"), libFiles);
-			
-		return installSet;
-	}
+    @Override
+    public Map<File, Collection<File>> getInstallSet(File workingDirectory) {
+        Map<File, Collection<File>> installSet = super
+                .getInstallSet(workingDirectory);
+        Collection<File> installFiles = new ArrayList<File>();
+        installFiles.add(new File(getAppName() + ".sh"));
+        installSet.put(new File("runners" + File.separator + "bin"),
+                installFiles);
 
-	protected String getAppName() {
-		return runnerVariables.get("APP_NAME");
-	}
-	
-	@Override
-	protected void applyDefaults() {
-		super.applyDefaults();
-		runnerVariables.put("APP_NAME", "java_app");
-		requiredVariables.add("RUNNER_MAIN_CLASS");
-	}
-	
-	private String getPrefix() {
-		return "org" + File.separator + "javadrop" + File.separator + "runnerstrategy" + File.separator + "java_app";
-	}
+        // Lib files
+        Collection<File> libFiles = getDirFiles(
+                new File(workingDirectory.getAbsolutePath() + File.separator
+                        + "lib"), new JarFilenameFilter());
+
+        if (libFiles.size() > 0)
+            installSet.put(new File("lib"), libFiles);
+
+        return installSet;
+    }
+
+    protected String getAppName() {
+        return runnerVariables.get("APP_NAME");
+    }
+
+    @Override
+    protected void applyDefaults() {
+        super.applyDefaults();
+        runnerVariables.put("APP_NAME", "java_app");
+        requiredVariables.add("RUNNER_MAIN_CLASS");
+    }
+
+    private String getPrefix() {
+        return "org" + File.separator + "javadrop" + File.separator
+                + "runnerstrategy" + File.separator + "java_app";
+    }
 
 }
