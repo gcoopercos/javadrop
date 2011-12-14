@@ -16,7 +16,6 @@
 package org.javadrop.runner.impl;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -31,6 +30,24 @@ import java.util.Map;
  */
 public class JavaAppStrategy extends BaseRunnerStrategy {
 
+    /**
+     * This artifact rename is used to place build artifacts into the /lib directory on distribution.
+     */
+    @Override
+    public Map<File, File> getArtifactRenames(File workingDirectory) {
+        HashMap<File,File> renameMap = new HashMap<File, File>();
+        
+        Collection<File> artifactFiles = getDirFiles(
+                new File(workingDirectory.getAbsolutePath()), new JarFilenameFilter());
+
+        for (File origFile : artifactFiles) {
+            renameMap.put(origFile, new File(workingDirectory.getAbsolutePath() + File.separator +
+                    "lib"+ File.separator + origFile.getName()));
+        }
+        
+        return renameMap;
+    }
+    
     @Override
     public Map<File, File> getConversionFiles(File outputDirectory) {
         Map<File, File> conversionFiles = new HashMap<File, File>(); // super.getConversionFiles(outputDirectory,
@@ -61,6 +78,18 @@ public class JavaAppStrategy extends BaseRunnerStrategy {
         if (libFiles.size() > 0)
             installSet.put(new File("lib"), libFiles);
 
+        Collection<File> artifactFiles = getDirFiles(
+                new File(workingDirectory.getAbsolutePath()), new JarFilenameFilter());
+        
+        if (artifactFiles.size() > 0) {
+            Collection<File> existingFiles = installSet.get(new File("lib"));
+            if (existingFiles == null) {
+                installSet.put(new File("lib"), artifactFiles);
+            } else {
+                existingFiles.addAll(artifactFiles);
+            }
+        }
+        
         return installSet;
     }
 

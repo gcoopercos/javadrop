@@ -277,6 +277,8 @@ public class InstallPackageGenMojoTest extends AbstractMojoTestCase {
     	new File(scriptOutputDir.getAbsolutePath() + File.separator + "lib").mkdirs();
     	File dummyFile = new File(scriptOutputDir.getAbsolutePath() + File.separator + "lib/dummy.jar");
     	dummyFile.createNewFile();
+    	dummyFile = new File(scriptOutputDir.getAbsolutePath() + File.separator + "dummyartifact.jar");
+    	dummyFile.createNewFile();
     	
         File testPom = getTestFile("src/test/resources/java_app_test_pom.xml");
 
@@ -357,6 +359,7 @@ public class InstallPackageGenMojoTest extends AbstractMojoTestCase {
         // Check to see if the rpm is there.
         File rpmFile = new File(getBasedir() + "/target/testdata/jtestapp-1.0-1309218173.noarch.rpm");
         checkRPMFile(rpmFile, "dummy.jar", "/usr/local/iovation/jtestapp/lib/");
+        checkRPMFile(rpmFile, "dummyartifact.jar", "/usr/local/iovation/jtestapp/");
     }
     
     
