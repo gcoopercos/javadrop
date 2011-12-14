@@ -31,23 +31,27 @@ import java.util.Map;
 public class JavaAppStrategy extends BaseRunnerStrategy {
 
     /**
-     * This artifact rename is used to place build artifacts into the /lib directory on distribution.
+     * This artifact rename is used to place build artifacts into the /lib
+     * directory on distribution.
      */
     @Override
     public Map<File, File> getArtifactRenames(File workingDirectory) {
-        HashMap<File,File> renameMap = new HashMap<File, File>();
-        
+        HashMap<File, File> renameMap = new HashMap<File, File>();
+
         Collection<File> artifactFiles = getDirFiles(
-                new File(workingDirectory.getAbsolutePath()), new JarFilenameFilter());
+                new File(workingDirectory.getAbsolutePath()),
+                new JarFilenameFilter());
 
         for (File origFile : artifactFiles) {
-            renameMap.put(origFile, new File(workingDirectory.getAbsolutePath() + File.separator +
-                    "lib"+ File.separator + origFile.getName()));
+            renameMap.put(origFile,
+                    new File(workingDirectory.getAbsolutePath()
+                            + File.separator + "lib" + File.separator
+                            + origFile.getName()));
         }
-        
+
         return renameMap;
     }
-    
+
     @Override
     public Map<File, File> getConversionFiles(File outputDirectory) {
         Map<File, File> conversionFiles = new HashMap<File, File>(); // super.getConversionFiles(outputDirectory,
@@ -57,6 +61,19 @@ public class JavaAppStrategy extends BaseRunnerStrategy {
                 + File.separator + "java_app_sh.vm"), new File(outputDirectory
                 + File.separator + "runners" + File.separator + "bin"
                 + File.separator + getAppName() + ".sh"));
+
+        // Grabs the properties file from the classpath.
+        // conf/[servicename].properties
+        conversionFiles.put(new File("conf" + File.separator + getAppName()
+                + ".properties"), new File(outputDirectory + File.separator
+                + "runners" + File.separator + "conf" + File.separator
+                + getAppName() + ".properties"));
+
+        // Grabs the log4j from the claspath
+        conversionFiles.put(new File("conf" + File.separator + getAppName()
+                + "-log4j.xml"), new File(outputDirectory + File.separator
+                + "runners" + File.separator + "conf" + File.separator
+                + getAppName() + "-log4j.xml"));
 
         return conversionFiles;
     }
@@ -79,8 +96,9 @@ public class JavaAppStrategy extends BaseRunnerStrategy {
             installSet.put(new File("lib"), libFiles);
 
         Collection<File> artifactFiles = getDirFiles(
-                new File(workingDirectory.getAbsolutePath()), new JarFilenameFilter());
-        
+                new File(workingDirectory.getAbsolutePath()),
+                new JarFilenameFilter());
+
         if (artifactFiles.size() > 0) {
             Collection<File> existingFiles = installSet.get(new File("lib"));
             if (existingFiles == null) {
@@ -89,7 +107,14 @@ public class JavaAppStrategy extends BaseRunnerStrategy {
                 existingFiles.addAll(artifactFiles);
             }
         }
-        
+
+        // Conf files
+        installFiles = new ArrayList<File>();
+        installFiles.add(new File(getAppName() + "-log4j.xml"));
+        installFiles.add(new File(getAppName() + ".properties"));
+        installSet.put(new File("runners" + File.separator + "conf"),
+                installFiles);
+
         return installSet;
     }
 
