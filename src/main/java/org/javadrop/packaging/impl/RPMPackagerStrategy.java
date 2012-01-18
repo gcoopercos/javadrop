@@ -129,6 +129,7 @@ public class RPMPackagerStrategy extends BasePackagerStrategy {
                     fs.setGid(getGid());
                     fs.setUserName(getUser());
                     fs.setUid(getUid());
+                    fs.setFileMode("0755");
                     task.addRpmfileset(fs);
                 }
             }
