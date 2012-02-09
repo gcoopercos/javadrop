@@ -30,7 +30,7 @@ public abstract class JavaDropBaseTest extends AbstractMojoTestCase {
     public void setUp() throws Exception {
         // Required for mojo lookup to work
         super.setUp();
-    
+
         scriptOutputDir = new File(getBasedir() + "/target/testdata");
         scriptOutputDir.mkdirs();
     }
@@ -58,25 +58,27 @@ public abstract class JavaDropBaseTest extends AbstractMojoTestCase {
                 fileContent.delete();
             }
         }
-    
+
         directory.delete();
     }
 
     /**
-     * This is a little horrid as it sucks a file into a String. However, for the purposes of
-     * testing it seems fine so long as it's not abused. (makes testing file contents easier)
+     * This is a little horrid as it sucks a file into a String. However, for
+     * the purposes of testing it seems fine so long as it's not abused. (makes
+     * testing file contents easier)
      * 
-     * @param filePath File to load in
+     * @param filePath
+     *            File to load in
      * @return String of THE ENTIRE FILE (so be careful)
      * @throws java.io.IOException
      */
-    protected String readFileAsString(String filePath) throws java.io.IOException {
+    protected String readFileAsString(String filePath)
+            throws java.io.IOException {
         StringBuffer fileData = new StringBuffer(1000);
-        BufferedReader reader = new BufferedReader(
-                new FileReader(filePath));
+        BufferedReader reader = new BufferedReader(new FileReader(filePath));
         char[] buf = new char[1024];
-        int numRead=0;
-        while((numRead=reader.read(buf)) != -1){
+        int numRead = 0;
+        while ((numRead = reader.read(buf)) != -1) {
             fileData.append(buf, 0, numRead);
         }
         reader.close();
@@ -86,28 +88,60 @@ public abstract class JavaDropBaseTest extends AbstractMojoTestCase {
     @SuppressWarnings("unchecked")
     protected void checkRPMFile(File rpmFile, String basename, String dirname)
             throws FileNotFoundException, Exception {
-            	Scanner scanner = new Scanner();
-                Format format = scanner.run(new ReadableChannelWrapper(Channels.newChannel(new FileInputStream(rpmFile))));
-            	
-                Entry<String[]> stringEntries = (Entry<String[]>) format.getHeader().getEntry(Header.HeaderTag.BASENAMES);
-                
-                String[] bnames = stringEntries.getValues();
-                if (!arrayContains(bnames, basename)) {
-                	fail("Basename not found in RPM: " + basename);
-                }
-                
-                stringEntries = (Entry<String[]>) format.getHeader().getEntry(Header.HeaderTag.DIRNAMES);
-                String[] dnames = stringEntries.getValues();
-                if (!arrayContains(dnames, dirname)) {
-                	fail("Dirname not found in RPM: " + dirname);
-                }
-            }
+        Scanner scanner = new Scanner();
+        Format format = scanner.run(new ReadableChannelWrapper(Channels
+                .newChannel(new FileInputStream(rpmFile))));
 
-    private boolean arrayContains(String [] sarray, String toFind) {
-    	for (String astr : sarray) {
-    		if (astr.equalsIgnoreCase(toFind)) return true;
-    	}
-    	return false;
+        Entry<String[]> stringEntries = (Entry<String[]>) format.getHeader()
+                .getEntry(Header.HeaderTag.BASENAMES);
+
+        String[] bnames = stringEntries.getValues();
+        if (!arrayContains(bnames, basename)) {
+            fail("Basename not found in RPM: " + basename);
+        }
+
+        stringEntries = (Entry<String[]>) format.getHeader().getEntry(
+                Header.HeaderTag.DIRNAMES);
+        String[] dnames = stringEntries.getValues();
+        if (!arrayContains(dnames, dirname)) {
+            fail("Dirname not found in RPM: " + dirname);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    protected void verifyRPMFileMissing(File rpmFile, String basename,
+            String dirname) throws FileNotFoundException, Exception {
+        boolean foundFile = false;
+        boolean foundDir = false;
+        Scanner scanner = new Scanner();
+        Format format = scanner.run(new ReadableChannelWrapper(Channels
+                .newChannel(new FileInputStream(rpmFile))));
+
+        Entry<String[]> stringEntries = (Entry<String[]>) format.getHeader()
+                .getEntry(Header.HeaderTag.BASENAMES);
+
+        String[] bnames = stringEntries.getValues();
+        if (arrayContains(bnames, basename)) {
+            foundFile = true;
+        }
+
+        stringEntries = (Entry<String[]>) format.getHeader().getEntry(
+                Header.HeaderTag.DIRNAMES);
+        String[] dnames = stringEntries.getValues();
+        if (arrayContains(dnames, dirname)) {
+            foundDir = true;
+            fail("Dirname not found in RPM: " + dirname);
+        }
+        assertFalse("File exists but it shouldn't: " + basename, foundFile);
+        assertFalse("Directory exists but it shouldn't: " + dirname, foundDir);
+    }
+
+    private boolean arrayContains(String[] sarray, String toFind) {
+        for (String astr : sarray) {
+            if (astr.equalsIgnoreCase(toFind))
+                return true;
+        }
+        return false;
     }
 
 }

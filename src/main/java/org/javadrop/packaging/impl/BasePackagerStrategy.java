@@ -22,6 +22,7 @@ import java.util.Map.Entry;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
+import org.javadrop.PackagerDefinition;
 import org.javadrop.TemplateProcessor;
 import org.javadrop.packaging.PackagerStrategy;
 import org.javadrop.runner.RunnerStrategy;
@@ -46,6 +47,8 @@ public abstract class BasePackagerStrategy  implements PackagerStrategy {
 	 */
 	private Log _log;
 	
+	private PackagerDefinition packagerDefinition;
+	
 	private void applyDefaults()
 	{
 		packagerVariables = new HashMap<String, String>();
@@ -63,6 +66,15 @@ public abstract class BasePackagerStrategy  implements PackagerStrategy {
 	}
 	
 	
+	@Override
+	public PackagerDefinition getPackagerDefinition() {
+	    return packagerDefinition;
+	}
+	
+	@Override
+	public void setPackagerDefinition(PackagerDefinition packageDef) {
+	    this.packagerDefinition = packageDef;
+	}
 	/**
 	 * Check the values supplied in the pom to see if they are ok.
 	 * @throws MojoExecutionException

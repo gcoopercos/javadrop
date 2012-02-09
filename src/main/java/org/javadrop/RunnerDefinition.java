@@ -20,6 +20,11 @@ public class RunnerDefinition {
      */
     private String runnerClass;
     
+    /**
+     * Name of the runner. Useful if there are multiple runners of the same type
+     * @parameter
+     */
+    private String runnerName;
     
     /**
      * This is the map of parameters for the runner. Effectively, these will be name/value pairs
@@ -36,5 +41,9 @@ public class RunnerDefinition {
     
     public String getRunnerClass() {
         return runnerClass;
+    }
+    
+    public String getRunnerName() {
+        return runnerName;
     }
 }

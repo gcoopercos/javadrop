@@ -150,12 +150,27 @@ public class JavadropMojo extends AbstractMojo {
                 // Do mappings, renames, whatever in the runner.
                 packager.postProcessArtifacts(runner, workingDirectory);
             }
+            
             packager.createPackage(packageDirectory, workingDirectory,
-                    runnerStrategies, getLog());
+                    filteredRunnerStrats(packager, runnerStrategies), getLog());
+//            packager.createPackage(packageDirectory, workingDirectory,
+//                    runnerStrategies, getLog());
         }
         getLog().info("Javadrop complete.");
     }
 
+    private List<RunnerStrategy> filteredRunnerStrats(PackagerStrategy packagerStrat, List<RunnerStrategy> runnerStrats) {
+        List<String> excludedRunners = packagerStrat.getPackagerDefinition().getExcludedRunners();
+        LinkedList<RunnerStrategy> filteredStrats = new LinkedList<RunnerStrategy>();
+        for (RunnerStrategy runStrat : runnerStrats) {
+            if (runStrat.getRunnerDefinition().getRunnerName() == null ||
+                   (excludedRunners.contains(runStrat.getRunnerDefinition().getRunnerName())  == false)) {
+                filteredStrats.add(runStrat);
+            }
+        }
+        return filteredStrats;
+    }
+    
     public void addURLToSystemClassLoader(URL url)
             throws IntrospectionException {
         URLClassLoader systemClassLoader = (URLClassLoader) ClassLoader
@@ -197,6 +212,7 @@ public class JavadropMojo extends AbstractMojo {
             // process templates.
             runnerStrat.applyParameters(runnerDef.getRunnerParameters());
             runnerStrat.set_log(getLog());
+            runnerStrat.setRunnerDefinition(runnerDef);
             runnerStrategies.add(runnerStrat);
         }
 
@@ -209,6 +225,7 @@ public class JavadropMojo extends AbstractMojo {
             // process templates.
             packagerStrat.applyParameters(packagerDef.getPackagerParameters());
             packagerStrat.set_log(getLog());
+            packagerStrat.setPackagerDefinition(packagerDef);
             packagerStrategies.add(packagerStrat);
         }
     }

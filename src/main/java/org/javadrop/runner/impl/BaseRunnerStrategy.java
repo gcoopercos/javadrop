@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.maven.plugin.logging.Log;
+import org.javadrop.RunnerDefinition;
 import org.javadrop.runner.RunnerStrategy;
 
 /**
@@ -54,7 +55,19 @@ public abstract class BaseRunnerStrategy implements RunnerStrategy {
     protected Set<String>         requiredVariables = new HashSet<String>();
 
     private Log                   _log;
+    
+    private RunnerDefinition      runnerDefinition;
 
+    @Override
+    public void setRunnerDefinition(RunnerDefinition runnerDef) {
+        this.runnerDefinition = runnerDef;
+    }
+    
+    @Override
+    public RunnerDefinition getRunnerDefinition() {
+        return this.runnerDefinition;
+    }
+    
     @Override
     public Map<File, File> getArtifactRenames(File workingDirectory) {
         // Default to doing nothing

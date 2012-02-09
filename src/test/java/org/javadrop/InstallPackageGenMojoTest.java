@@ -24,8 +24,7 @@ import java.util.Set;
 import org.junit.Test;
 
 /**
- * Simplistic sanity unit test for seeing that the scriptgen is doing something
- * reasonable.
+ * Various tests for different configurations of javadrop artifacts.
  * 
  * @author gcooperpdx
  * 
@@ -298,4 +297,50 @@ public class InstallPackageGenMojoTest extends JavaDropBaseTest {
         checkRPMFile(rpmFile, "jtytestsvc.properties", "/usr/local/iovation/" + testPrefix + "/conf/");
     }
 
+    
+    /**
+     * This does a basic sanity check to see that the directory structure is
+     * correct for a 'multi' strategy project.
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testMultiLauncherParadigm() throws Exception {
+        createDummyWarFile();
+
+        // Dummy up some java lib to go in the rpm
+        new File(scriptOutputDir.getAbsolutePath() + File.separator + "lib")
+                .mkdirs();
+        File dummyFile = new File(scriptOutputDir.getAbsolutePath()
+                + File.separator + "lib/dummy.jar");
+        dummyFile.createNewFile();
+
+        File dummyBuildJar = new File(scriptOutputDir.getAbsolutePath()
+                + File.separator + "dummyartifact.jar");
+        File testPom = getTestFile("src/test/resources/multi_runner_multi_packager_test_pom.xml");
+        dummyBuildJar.createNewFile();
+
+        JavadropMojo mojo;
+        mojo = (JavadropMojo) lookupMojo("javadrop", testPom);
+        assertNotNull(mojo);
+        mojo.setWorkingDirectory(scriptOutputDir);
+        mojo.setPackageDirectory(scriptOutputDir);
+        mojo.execute();
+
+        jettyResults(true, "jtytestsvc");
+        javaAppResults(2);
+        // Check for web port default of 8080
+        String fileResult = readFileAsString(getBasedir()
+                + "/target/testdata/runners/conf/jetty-spring.xml");
+        assertTrue("Missing or incorrect web port number",
+                fileResult.contains("SelectChannelConnector\" p:port=\"9000\""));
+
+        
+        // Check to see that the exclusion 'jtytestsvc' is missing from the 'jtestapp' rpm
+        File rpmFile = new File(getBasedir()
+                + "/target/testdata/jtestapp-1.0-1309218173.noarch.rpm");
+        verifyRPMFileMissing(rpmFile, "jtytestsvc", "/usr/local/iovation/jtestapp/bin");
+    }
+
 }
+

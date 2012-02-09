@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.Map;
 
 import org.apache.maven.plugin.logging.Log;
+import org.javadrop.RunnerDefinition;
 
 /**
  * This interface defines a particular runner strategy. A runner strategy is responsible for
@@ -32,6 +33,18 @@ import org.apache.maven.plugin.logging.Log;
  *
  */
 public interface RunnerStrategy {
+    /**
+     * Passed the original runner definition from the maven pom.
+     * @param runnerDef Runner definition as defined in the .pom file
+     */
+    void setRunnerDefinition(RunnerDefinition runnerDef);
+    
+    /**
+     * Get the original runner definition as defined in the pom
+     * @return The runner definition as defined in the .pom file
+     */
+    RunnerDefinition getRunnerDefinition();
+    
     /**
      * Returns a list of target artifacts to be renamed.
      * @param workingDirectory Target directory where the artifacts live

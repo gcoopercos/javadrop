@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
+import org.javadrop.PackagerDefinition;
 import org.javadrop.TemplateProcessor;
 import org.javadrop.runner.RunnerStrategy;
 
@@ -33,6 +34,11 @@ import org.javadrop.runner.RunnerStrategy;
  *
  */
 public interface PackagerStrategy {
+    /**
+     * Sets the packager definition as it exists in the .pm
+     */
+    void setPackagerDefinition(PackagerDefinition packagerDef);
+    
 	/**
 	 * Apply the plugin's set of parameters to the runner
 	 */
@@ -82,6 +88,8 @@ public interface PackagerStrategy {
 	 * @param workingDirectory Directory where the work is happening
 	 */
     void postProcessArtifacts(RunnerStrategy runner, File workingDirectory);
+
+    PackagerDefinition getPackagerDefinition();
 	
 }
 

@@ -1,5 +1,7 @@
 package org.javadrop;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 
@@ -32,11 +34,21 @@ public class PackagerDefinition {
      */
     private Map<String,String> packagerParameters;
 
+    /**
+     * Runners that are not to be include in this package.
+     */
+    private List<String> excludedRunners;
+    
     public Map<String,String> getPackagerParameters() {
         return packagerParameters;
     }
     
     public String getPackagerClass() {
         return packagerClass;
+    }
+    
+    public List<String> getExcludedRunners() {
+        if (excludedRunners == null) return Collections.emptyList();
+        return excludedRunners;
     }
 }
