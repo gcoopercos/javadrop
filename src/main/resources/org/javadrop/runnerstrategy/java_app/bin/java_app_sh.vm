@@ -20,7 +20,7 @@
 # for executing the service in a specific way.
 #
 
-#set( $PID_FILE = "${PKG_INSTALL_LOC}/${APP_NAME}.pid" )
+#set( $PID_FILE = "/var/run/${APP_NAME}.pid" )
 
 #*
 The following 'empty sets' are necessary so that velocity will escape the variables

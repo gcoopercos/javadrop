@@ -9,7 +9,7 @@
 #
 # Script designed to launch a jetty based service.
 #
-#set( $PID_FILE = "${PKG_INSTALL_LOC}/${PKG_NAME}.pid" )
+#set( $PID_FILE = "/var/run/${PKG_NAME}.pid" )
 
 
 #set( $CLASSPATH = "")
@@ -29,7 +29,7 @@
 #set( $JETTY_PID = "" ) 
 
 prog_home=${PKG_INSTALL_LOC}
-log_dir=${PKG_INSTALL_LOC}/log
+log_dir=/var/log/iovation/${PKG_NAME}
 pidfile=${PID_FILE}
 
 if [ ! -d "\$prog_home" ]; then

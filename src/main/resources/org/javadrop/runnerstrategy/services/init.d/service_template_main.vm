@@ -10,8 +10,8 @@
 # services.
 #
 
-#set( $PID_FILE = "${PKG_INSTALL_LOC}/${PKG_NAME}.pid" )
-#set( $LOCK_FILE = "${PKG_INSTALL_LOC}/${PKG_NAME}.lock" )
+#set( $PID_FILE = "/var/run/${PKG_NAME}.pid" )
+#set( $LOCK_FILE = "/var/lock/subsys/${PKG_NAME}.lock" )
 
 #*
 The following 'empty sets' are necessary so that velocity will escape the variables

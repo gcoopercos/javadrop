@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
+import org.apache.maven.project.MavenProject;
 import org.javadrop.PackagerDefinition;
 import org.javadrop.TemplateProcessor;
 import org.javadrop.runner.RunnerStrategy;
@@ -52,7 +53,8 @@ public interface PackagerStrategy {
 	 * @param processor Template engine used to process key/value pairs
 	 * @param workingDirectory The end result for the processed templates
 	 */
-	void processTemplates(RunnerStrategy runner, TemplateProcessor processor, File workingDirectory) throws MojoExecutionException;
+	void processTemplates(MavenProject mavenProject, RunnerStrategy runner, 
+	        TemplateProcessor processor, File workingDirectory) throws MojoExecutionException;
 
 	/**
 	 * Once all the templates have been processed this will take all the artifacts and make an
@@ -62,7 +64,7 @@ public interface PackagerStrategy {
 	 * @param runners The runners to create the package for
 	 * @throws MojoExecutionException If there is a problem creating the package this is thrown. 
 	 */
-	void createPackage(File packageDirectory, File workingDirectory, Collection<RunnerStrategy> runners, Log _log) throws MojoExecutionException;	
+	void createPackage(MavenProject mavenProject, File packageDirectory, File workingDirectory, Collection<RunnerStrategy> runners, Log _log) throws MojoExecutionException;	
 
 	/**
 	 * Provides a list of the names of the template files that this strategy needs converted.
@@ -83,13 +85,12 @@ public interface PackagerStrategy {
 	 * After templates have been processed it might also be desirable for the packager to
 	 * post-process artifacts of the build. This might include, but is not limited to, renaming
 	 * war files, moving files, etc...
-	 * 
+	 * @param mavenProject Maven project to get access to dependencies and other things.
 	 * @param runner The runner who's context the artifacts will be processed in.
 	 * @param workingDirectory Directory where the work is happening
 	 */
-    void postProcessArtifacts(RunnerStrategy runner, File workingDirectory);
+    void postProcessArtifacts(MavenProject mavenProject, RunnerStrategy runner, File workingDirectory);
 
     PackagerDefinition getPackagerDefinition();
-	
 }
 

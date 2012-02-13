@@ -19,7 +19,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
+
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.project.MavenProject;
 
 
 
@@ -33,7 +38,7 @@ import java.util.Map;
 public class MainServiceStrategy extends BaseRunnerStrategy {
 	
 	@Override
-	public Map<File, File> getConversionFiles(File outputDirectory) {
+	public Map<File, File> getConversionFiles(MavenProject mavenProject, File outputDirectory) {
 		Map<File,File> conversionFiles = new HashMap<File, File>(); //super.getConversionFiles(outputDirectory, serviceName);
 
 		conversionFiles.put(new File(getPrefix() + File.separator + "bin" + File.separator + "service_sh.vm"),
@@ -50,20 +55,29 @@ public class MainServiceStrategy extends BaseRunnerStrategy {
                 new File(outputDirectory + File.separator + "runners" + File.separator + "conf" + File.separator + 
                         getServiceName() + "-log4j.xml"));
         
+
+        @SuppressWarnings("unchecked")
+        Set<Artifact> artifacts = mavenProject.getArtifacts();
+        Collection<File> artifactFiles = new LinkedList<File>();
+        for (Artifact art : artifacts) {
+            artifactFiles.add(art.getFile());
+        }
+
         // Grabs artifacts and puts them in lib
-        Collection<File> buildFiles = getDirFiles(outputDirectory,
-                new JarFilenameFilter());
-        for (File artifact : buildFiles) {
-            conversionFiles.put(artifact,
-                    new File(outputDirectory + File.separator + "lib" + File.separator + artifact.getName()));
+//        Collection<File> buildFiles = getDirFiles(outputDirectory,
+//                new JarFilenameFilter());
+//        for (File artifact : buildFiles) {
+        for (File artifactFile : artifactFiles) {
+            conversionFiles.put(artifactFile,
+                    new File(outputDirectory + File.separator + "lib" + File.separator + artifactFile.getName()));
         }
 
 		return conversionFiles;
 	}
 
 	@Override
-	public Map<File, Collection<File>> getInstallSet(File workingDirectory) {
-		Map<File, Collection<File>> installSet = super.getInstallSet(workingDirectory);
+	public Map<File, Collection<File>> getInstallSet(MavenProject mavenProj, File workingDirectory) {
+		Map<File, Collection<File>> installSet = super.getInstallSet(mavenProj, workingDirectory);
 		Collection<File> installFiles = new ArrayList<File>();
 		installFiles.add(new File(getServiceName() + ".sh"));
 		installSet.put(new File("runners" + File.separator + "bin"), installFiles);

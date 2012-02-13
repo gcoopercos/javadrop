@@ -145,13 +145,13 @@ public class JavadropMojo extends AbstractMojo {
         for (PackagerStrategy packager : packagerStrategies) {
             for (RunnerStrategy runner : runnerStrategies) {
                 // Convert scripts
-                packager.processTemplates(runner, processor, workingDirectory);
+                packager.processTemplates(mavenProject, runner, processor, workingDirectory);
 
                 // Do mappings, renames, whatever in the runner.
-                packager.postProcessArtifacts(runner, workingDirectory);
+                packager.postProcessArtifacts(mavenProject, runner, workingDirectory);
             }
             
-            packager.createPackage(packageDirectory, workingDirectory,
+            packager.createPackage(mavenProject, packageDirectory, workingDirectory,
                     filteredRunnerStrats(packager, runnerStrategies), getLog());
 //            packager.createPackage(packageDirectory, workingDirectory,
 //                    runnerStrategies, getLog());
@@ -230,72 +230,15 @@ public class JavadropMojo extends AbstractMojo {
         }
     }
 
-
     public List<RunnerDefinition> getRunnerDefinitions() {
         return runnerDefinitions;
     }
 
-    /**
-     * Check the values supplied in the pom to see if they are ok.
-     * 
-     * @throws MojoExecutionException
-     */
-    // private void validateParameters() throws MojoExecutionException
-    // {
-    // // Override default values with what is supplied in the .pom
-    // mergedVariables.putAll(serviceVariables);
-    // getLog().info("Scriptgen mojo variables");
-    // for (Entry<String,String> velVariable : mergedVariables.entrySet()) {
-    // getLog().info("		Definition: " + velVariable.getKey() + "=" +
-    // velVariable.getValue());
-    // }
-    //
-    // // Check required variables.
-    // List<String> missingVars = new LinkedList<String>();
-    // for (String reqVar : requiredVariables) {
-    // if (mergedVariables.containsKey(reqVar) == false) {
-    // missingVars.add(reqVar);
-    // }
-    // }
-    //
-    // if (missingVars.isEmpty() == false) {
-    // StringBuilder sb = new StringBuilder();
-    // boolean first = true;
-    // for (String missingVar : missingVars) {
-    // if (!first) sb.append(',');
-    // else first = false;
-    // sb.append(missingVar);
-    // }
-    // throw new
-    // MojoExecutionException("Script generation is missing required variables: "
-    // + sb.toString());
-    // }
-    //
-    // // Apply the variables to the velocity context.
-    // for (Entry<String,String> contextVar : mergedVariables.entrySet()) {
-    // velContext.put(contextVar.getKey(), contextVar.getValue());
-    // }
-    // }
+    public MavenProject getMavenProject() {
+        return mavenProject;
+    }
 
-    /**
-     * Determine the particular service type being targed.
-     */
-    // private void determineStrategy() throws MojoExecutionException
-    // {
-    // // Check the serviceType provided.
-    // if (serviceType == null) {
-    // throw new
-    // MojoExecutionException("Missing 'serviceType'. Must be one of ('jetty', 'standalone')");
-    // }
-    // if ("jetty".equalsIgnoreCase(serviceType)) {
-    // serviceStrategy = new JettyStrategy();
-    // } else if ("standalone".equalsIgnoreCase(serviceType)) {
-    // serviceStrategy = new MainServiceStrategy();
-    // }
-    // if (serviceStrategy == null) {
-    // throw new
-    // MojoExecutionException("Invalid 'serviceType'. Must be one of ('jetty', 'standalone')");
-    // }
-    // }
-
+    public void setMavenProject(MavenProject mavenProject) {
+        this.mavenProject = mavenProject;
+    }
 }

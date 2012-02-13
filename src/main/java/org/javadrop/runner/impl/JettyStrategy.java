@@ -19,7 +19,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
+
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.project.MavenProject;
 
 /**
  * This implementation of the service strategy is designed to jetty web services
@@ -31,10 +36,10 @@ import java.util.Map;
 public class JettyStrategy extends BaseRunnerStrategy {
 
     @Override
-    public Map<File, File> getArtifactRenames(File workingDirectory) {
+    public Map<File, File> getArtifactRenames(MavenProject mavenProj, File workingDirectory) {
         HashMap<File, File> renameMap = new HashMap<File, File>();
 
-        File warFile = getGenericWar(workingDirectory);
+        File warFile = getGenericWar(mavenProj);
         if (warFile == null) {
             get_log().error("War file not available");
         } else {
@@ -47,7 +52,7 @@ public class JettyStrategy extends BaseRunnerStrategy {
     }
 
     @Override
-    public Map<File, File> getConversionFiles(File outputDirectory) {
+    public Map<File, File> getConversionFiles(MavenProject mavenProject, File outputDirectory) {
         Map<File, File> conversionFiles = new HashMap<File, File>(); // super.getConversionFiles(outputDirectory,
                                                                      // serviceName);
 
@@ -94,14 +99,28 @@ public class JettyStrategy extends BaseRunnerStrategy {
                 + "runners" + File.separator + "conf" + File.separator
                 + getServiceName() + "-log4j.xml"));
 
+        // Grabs artifacts and puts them in lib
+        @SuppressWarnings("unchecked")
+        Set<Artifact> artifacts = mavenProject.getDependencyArtifacts();
+        Collection<File> artifactFiles = new LinkedList<File>();
+        for (Artifact art : artifacts) {
+            artifactFiles.add(art.getFile());
+        }
+
+        for (File artifactFile : artifactFiles) {
+            conversionFiles.put(artifactFile,
+                    new File(outputDirectory + File.separator + "lib" + File.separator + artifactFile.getName()));
+        }
+
+
         return conversionFiles;
     }
 
     @Override
-    public Map<File, Collection<File>> getInstallSet(File workingDirectory) {
+    public Map<File, Collection<File>> getInstallSet(MavenProject mavenProject, File workingDirectory) {
         // TODO Eliminate this synchronization bs.
         Map<File, Collection<File>> installSet = super
-                .getInstallSet(workingDirectory);
+                .getInstallSet(mavenProject, workingDirectory);
         Collection<File> installFiles = new ArrayList<File>();
         installFiles.add(new File(getServiceName() + ".sh"));
         installSet.put(new File("runners" + File.separator + "bin"),
@@ -127,30 +146,55 @@ public class JettyStrategy extends BaseRunnerStrategy {
         installFiles.add(new File(getTargetWarName()));
         installSet.put(new File("runners" + File.separator + "war"),
                 installFiles);
+        
+        // Lib files - These shoulnd't be duplicated in the war
+//        Collection<File> libFiles = getDirFiles(new File(workingDirectory.getAbsolutePath() + File.separator + "lib"),
+//                new JarFilenameFilter());
+//        get_log().info("Lib files");
+//        for (File lf : libFiles) {
+//            get_log().info("   LF: " + lf);
+//        }
+        
+        // Note this slightly different from the 'MainServiceStrategy'. The jetty strategy
+        // ONLY gets direct dependents of the current project (probably deployment). This is
+        // needed to bootstrap the jetty web app.
+        @SuppressWarnings("unchecked")
+        Set<Artifact> artifacts = mavenProject.getDependencyArtifacts();
+        Collection<File> artifactFiles = new LinkedList<File>();
+        get_log().info("Jetty Strategy Direct dependencies: ");
+        for (Artifact art : artifacts) {
+            get_log().info("   Artifact: "+ art.getFile());
+            artifactFiles.add(art.getFile());
+        }
+        
+        if (artifactFiles.size() > 0) installSet.put(new File("lib"), artifactFiles);
 
         return installSet;
     }
 
-    private File getGenericWar(File workingDirectory) {
-        // TODO Hacky.. Just grabs 1st war in the directory. Ugh.
-        File[] dirfiles = workingDirectory.listFiles();
-        for (File dfile : dirfiles) {
+    /**
+     * Grabs the first .war file it finds from the DIRECT dependencies (excluding transitive ones).
+     * This is less-hacky that it was but still makes the assumption that the
+     * direct dependencies only include one .war file - which should be true.
+     * 
+     * @param mavenProject Standard maven project for dependency information
+     * @return
+     */
+    private File getGenericWar(MavenProject mavenProject) {
+        @SuppressWarnings("unchecked")
+        Set<Artifact> artifacts = mavenProject.getDependencyArtifacts();
+        Collection<File> artifactFiles = new LinkedList<File>();
+        for (Artifact art : artifacts) {
+            artifactFiles.add(art.getFile());
+        }
+        
+        for (File dfile : artifactFiles) {
             if (dfile.getName().contains(".war")) {
                 return dfile;
             }
         }
 
-        // Next check the lib directory as that's where maven dependencies will
-        // be placed (double ugh)
-        File libDir = new File(workingDirectory.getAbsolutePath()
-                + File.separator + "lib");
-        dirfiles = libDir.listFiles();
-        for (File dfile : dirfiles) {
-            if (dfile.getName().contains(".war")) {
-                return dfile;
-            }
-        }
-
+        get_log().error("WAR file not found. There must be at least one war file in the direct dependencie for the Jetty runner strategy.");
         return null;
     }
 

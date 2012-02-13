@@ -20,7 +20,6 @@ below properly.
 echo "Preinstallation..."
 
 WAR_HOME=$PKG_INSTALL_LOC/war
-
 if [ "$1" = "2" ]; then
     # we are doing an upgrade
     echo "Stopping $PKG_NAME service"
@@ -35,13 +34,13 @@ if [ ! -e $PKG_INSTALL_LOC ]; then
     mkdir -p $PKG_INSTALL_LOC
 fi;
 
-echo "Before group"
-if [ -z "`grep $PKG_GROUP /etc/group`" ]; then
+ echo "Before group"
+if [ -z `grep $PKG_GROUP /etc/group` ]; then
     echo "Adding group $PKG_GROUP"
     /usr/sbin/groupadd -g PKG_GROUPID $PKG_GROUP
 fi;
 echo "Before user"
-if [ -z '`grep $PKG_USER /etc/passwd`' ]; then
+if [ -z `grep $PKG_USER /etc/passwd` ]; then
     echo "Adding user $PKG_USER"
     /usr/sbin/useradd -M -g $PKG_GROUPID -d $PKG_INSTALL_LOC -u $PKG_USERID $PKG_USER
 fi;
@@ -49,7 +48,6 @@ fi;
 
 echo "Directory and permissions complete."
 
-## Patch for upgrading to use drsuser instead of ioapp as the user
 echo "USER: $PKG_USER"
 echo "GROUP: $PKG_GROUP"
 echo "NAME: $PKG_NAME"

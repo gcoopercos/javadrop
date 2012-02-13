@@ -22,6 +22,7 @@ import java.util.Map.Entry;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
+import org.apache.maven.project.MavenProject;
 import org.javadrop.PackagerDefinition;
 import org.javadrop.TemplateProcessor;
 import org.javadrop.packaging.PackagerStrategy;
@@ -90,7 +91,7 @@ public abstract class BasePackagerStrategy  implements PackagerStrategy {
 	
 	
 	@Override
-	public void processTemplates(RunnerStrategy runner,
+	public void processTemplates(MavenProject mavenProj, RunnerStrategy runner,
 			TemplateProcessor processor, File workingDirectory) throws MojoExecutionException {
 		
 		// Go through and create all the destination locations.
@@ -98,7 +99,7 @@ public abstract class BasePackagerStrategy  implements PackagerStrategy {
 			workingDirectory.mkdirs();
 		}
 			
-		Map<File, File> conversionFiles = runner.getConversionFiles(workingDirectory);
+		Map<File, File> conversionFiles = runner.getConversionFiles(mavenProj, workingDirectory);
 	
 		Map<String, String> templateParameters = new HashMap<String,String>();
 		templateParameters.putAll(packagerVariables);

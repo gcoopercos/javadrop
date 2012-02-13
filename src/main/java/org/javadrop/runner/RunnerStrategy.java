@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.Map;
 
 import org.apache.maven.plugin.logging.Log;
+import org.apache.maven.project.MavenProject;
 import org.javadrop.RunnerDefinition;
 
 /**
@@ -48,15 +49,16 @@ public interface RunnerStrategy {
     /**
      * Returns a list of target artifacts to be renamed.
      * @param workingDirectory Target directory where the artifacts live
+     * @param mavenProj The maven project. Primarily for dependency access
      * @return Mapping of old file -> new file of artifacts produced in the build.
      */
-    Map<File, File> getArtifactRenames(File workingDirectory);
+    Map<File, File> getArtifactRenames(MavenProject mavenProj, File workingDirectory);
     
 	/**
 	 * Provides a list of the names of the template files that this strategy needs converted. 
 	 * @return Map of source file -> destination file for velocity templates to process
 	 */
-	Map<File,File> getConversionFiles(File outputDirectory);
+	Map<File,File> getConversionFiles(MavenProject mavenProject, File outputDirectory);
 	
 	/**
 	 * Apply the plugin's set of parameters to the runner
@@ -78,7 +80,7 @@ public interface RunnerStrategy {
 	 *    doesn't exist then this plugin will fail to install the files.
 	 *    Collection<file> is a collection of files that will go into that directory.
 	 */
-	Map<File, Collection<File>> getInstallSet(File workingDirectory);
+	Map<File, Collection<File>> getInstallSet(MavenProject mavenProject, File workingDirectory);
 
 	/**
 	 * Sets to point at the maven logger

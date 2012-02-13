@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.maven.plugin.logging.Log;
+import org.apache.maven.project.MavenProject;
 import org.javadrop.RunnerDefinition;
 import org.javadrop.runner.RunnerStrategy;
 
@@ -69,13 +70,13 @@ public abstract class BaseRunnerStrategy implements RunnerStrategy {
     }
     
     @Override
-    public Map<File, File> getArtifactRenames(File workingDirectory) {
+    public Map<File, File> getArtifactRenames(MavenProject mavenProj, File workingDirectory) {
         // Default to doing nothing
         return new HashMap<File, File>();
     }
 
     @Override
-    public Map<File, Collection<File>> getInstallSet(File workingDirectory) {
+    public Map<File, Collection<File>> getInstallSet(MavenProject mavenProject,File workingDirectory) {
         // TODO Need to better abstract this to eliminate the need to keep in
         // sync with 'getConversionFiles()'
         Map<File, Collection<File>> installSet = new HashMap<File, Collection<File>>();

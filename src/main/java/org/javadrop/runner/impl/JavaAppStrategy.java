@@ -21,6 +21,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.maven.project.MavenProject;
+
 /**
  * This implementation of the runner strategy is designed to support stand-alone
  * java client programs that have their own 'main(..)'.
@@ -35,7 +37,7 @@ public class JavaAppStrategy extends BaseRunnerStrategy {
      * directory on distribution.
      */
     @Override
-    public Map<File, File> getArtifactRenames(File workingDirectory) {
+    public Map<File, File> getArtifactRenames(MavenProject mavenProj, File workingDirectory) {
         HashMap<File, File> renameMap = new HashMap<File, File>();
 
         Collection<File> artifactFiles = getDirFiles(
@@ -53,7 +55,7 @@ public class JavaAppStrategy extends BaseRunnerStrategy {
     }
 
     @Override
-    public Map<File, File> getConversionFiles(File outputDirectory) {
+    public Map<File, File> getConversionFiles(MavenProject mavenProject, File outputDirectory) {
         Map<File, File> conversionFiles = new HashMap<File, File>(); // super.getConversionFiles(outputDirectory,
                                                                      // serviceName);
 
@@ -79,9 +81,9 @@ public class JavaAppStrategy extends BaseRunnerStrategy {
     }
 
     @Override
-    public Map<File, Collection<File>> getInstallSet(File workingDirectory) {
+    public Map<File, Collection<File>> getInstallSet(MavenProject mavenProj, File workingDirectory) {
         Map<File, Collection<File>> installSet = super
-                .getInstallSet(workingDirectory);
+                .getInstallSet(mavenProj, workingDirectory);
         Collection<File> installFiles = new ArrayList<File>();
         installFiles.add(new File(getAppName() + ".sh"));
         installSet.put(new File("runners" + File.separator + "bin"),

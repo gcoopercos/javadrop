@@ -20,7 +20,7 @@
 # for executing the service in a specific way.
 #
 
-#set( $PID_FILE = "${PKG_INSTALL_LOC}/${PKG_NAME}.pid" )
+#set( $PID_FILE = "/var/run/${PKG_NAME}.pid" )
 
 #*
 The following 'empty sets' are necessary so that velocity will escape the variables
@@ -35,6 +35,8 @@ below properly.
 #set( $configflag = "" )
 #set( $JAVA_CONFIG = "" )
 # Get the command line option for a java config param
+
+log_dir=/var/log/iovation/${PKG_NAME}
 
 
 #if ( $JMX_PORT )
@@ -75,5 +77,5 @@ umask 022;
 
 touch $PID_FILE
 
-\$JAVA_EXEC \$JAVA_OPTS -cp \$MYCLASSPATH ${SVC_MAIN_CLASS} &
+\$JAVA_EXEC \$JAVA_OPTS -cp \$MYCLASSPATH ${SVC_MAIN_CLASS} &>\$log_dir/start.log &
 echo $!! > $PID_FILE

@@ -15,13 +15,19 @@
  ******************************************************************************/
 package org.javadrop;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.project.MavenProject;
 import org.junit.Test;
+
 
 /**
  * Various tests for different configurations of javadrop artifacts.
@@ -66,6 +72,15 @@ public class InstallPackageGenMojoTest extends JavaDropBaseTest {
         assertNotNull(mojo);
         mojo.setWorkingDirectory(scriptOutputDir);
         mojo.setPackageDirectory(scriptOutputDir);
+        
+        MavenProject mockProj = mock(MavenProject.class);
+        Artifact mockArt = mock(Artifact.class);
+        when(mockArt.getFile()).thenReturn(dummyBuildJar);
+        HashSet dummyFiles = new HashSet();
+        dummyFiles.add(mockArt);
+        when(mockProj.getArtifacts()).thenReturn(dummyFiles);
+        mojo.setMavenProject(mockProj);
+
         mojo.execute();
 
         // Now analyze the directories for proper contents
@@ -117,7 +132,7 @@ public class InstallPackageGenMojoTest extends JavaDropBaseTest {
      */
     @Test
     public void testJettyScriptCreation() throws Exception {
-        createDummyWarFile();
+        File dummyWarFile = createDummyWarFile();
 
         File testPom = getTestFile("src/test/resources/jetty_service_test_pom.xml");
 
@@ -126,6 +141,18 @@ public class InstallPackageGenMojoTest extends JavaDropBaseTest {
         assertNotNull(mojo);
         mojo.setWorkingDirectory(scriptOutputDir);
         mojo.setPackageDirectory(scriptOutputDir);
+        
+        MavenProject mockProj = mock(MavenProject.class);
+        HashSet dummyFiles = new HashSet();
+        when(mockProj.getArtifacts()).thenReturn(dummyFiles);
+        
+        HashSet dummyWars = new HashSet();
+        Artifact mockArt = mock(Artifact.class);
+        when(mockArt.getFile()).thenReturn(dummyWarFile);
+        dummyWars.add(mockArt);
+        when(mockProj.getDependencyArtifacts()).thenReturn(dummyWars);
+        mojo.setMavenProject(mockProj);
+        
         mojo.execute();
 
         // Now analyze the directories for proper contents
@@ -139,7 +166,7 @@ public class InstallPackageGenMojoTest extends JavaDropBaseTest {
 
     }
 
-    private void createDummyWarFile() throws IOException {
+    private File  createDummyWarFile() throws IOException {
         // Simulate the creation of the war file by the build in the target
         // directory
         // new File(scriptOutputDir.getAbsolutePath() + File.separator +
@@ -147,6 +174,7 @@ public class InstallPackageGenMojoTest extends JavaDropBaseTest {
         File dummyWarFile = new File(scriptOutputDir.getAbsolutePath()
                 + File.separator + "jtytestsvc-1.0.war");
         dummyWarFile.createNewFile();
+        return dummyWarFile;
     }
 
     /**
@@ -157,7 +185,7 @@ public class InstallPackageGenMojoTest extends JavaDropBaseTest {
      */
     @Test
     public void testMultiScriptCreation() throws Exception {
-        createDummyWarFile();
+        File dummyWarFile = createDummyWarFile();
 
         // Dummy up some java lib to go in the rpm
         new File(scriptOutputDir.getAbsolutePath() + File.separator + "lib")
@@ -172,10 +200,23 @@ public class InstallPackageGenMojoTest extends JavaDropBaseTest {
         dummyBuildJar.createNewFile();
 
         JavadropMojo mojo;
+
+        
+        
         mojo = (JavadropMojo) lookupMojo("javadrop", testPom);
         assertNotNull(mojo);
         mojo.setWorkingDirectory(scriptOutputDir);
         mojo.setPackageDirectory(scriptOutputDir);
+        MavenProject mockProj = mock(MavenProject.class);
+        HashSet dummyFiles = new HashSet();
+        when(mockProj.getArtifacts()).thenReturn(dummyFiles);
+        mojo.setMavenProject(mockProj);
+        HashSet dummyWars = new HashSet();
+        Artifact mockArt = mock(Artifact.class);
+        when(mockArt.getFile()).thenReturn(dummyWarFile);
+        dummyWars.add(mockArt);
+        when(mockProj.getDependencyArtifacts()).thenReturn(dummyWars);
+        mojo.setMavenProject(mockProj);
         mojo.execute();
 
         jettyResults(true, "jtestapp");
@@ -306,7 +347,7 @@ public class InstallPackageGenMojoTest extends JavaDropBaseTest {
      */
     @Test
     public void testMultiLauncherParadigm() throws Exception {
-        createDummyWarFile();
+        File dummyWarFile = createDummyWarFile();
 
         // Dummy up some java lib to go in the rpm
         new File(scriptOutputDir.getAbsolutePath() + File.separator + "lib")
@@ -325,6 +366,16 @@ public class InstallPackageGenMojoTest extends JavaDropBaseTest {
         assertNotNull(mojo);
         mojo.setWorkingDirectory(scriptOutputDir);
         mojo.setPackageDirectory(scriptOutputDir);
+        MavenProject mockProj = mock(MavenProject.class);
+        HashSet dummyFiles = new HashSet();
+        when(mockProj.getArtifacts()).thenReturn(dummyFiles);
+        mojo.setMavenProject(mockProj);
+        HashSet dummyWars = new HashSet();
+        Artifact mockArt = mock(Artifact.class);
+        when(mockArt.getFile()).thenReturn(dummyWarFile);
+        dummyWars.add(mockArt);
+        when(mockProj.getDependencyArtifacts()).thenReturn(dummyWars);
+        mojo.setMavenProject(mockProj);
         mojo.execute();
 
         jettyResults(true, "jtytestsvc");

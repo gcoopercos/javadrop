@@ -23,6 +23,7 @@ import java.util.Map.Entry;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
+import org.apache.maven.project.MavenProject;
 import org.apache.tools.ant.Project;
 import org.freecompany.redline.ant.RedlineTask;
 import org.freecompany.redline.ant.RpmFileSet;
@@ -44,10 +45,10 @@ import org.javadrop.runner.impl.MainServiceStrategy;
 public class RPMPackagerStrategy extends BasePackagerStrategy {
 
     @Override
-    public void postProcessArtifacts(RunnerStrategy runner,
+    public void postProcessArtifacts(MavenProject mavenProj, RunnerStrategy runner,
             File workingDirectory) {
         // Rename any files necessary.
-        Map<File, File> mapFiles = runner.getArtifactRenames(workingDirectory);
+        Map<File, File> mapFiles = runner.getArtifactRenames(mavenProj, workingDirectory);
         for (Entry<File, File> mapFile : mapFiles.entrySet()) {
             File oldFile = mapFile.getKey();
             File newFile = mapFile.getValue();
@@ -58,7 +59,7 @@ public class RPMPackagerStrategy extends BasePackagerStrategy {
     }
 
     @Override
-    public void createPackage(File packagerDirectory, File workingDirectory,
+    public void createPackage(MavenProject mavenProj,  File packagerDirectory, File workingDirectory,
             Collection<RunnerStrategy> runners, Log log)
             throws MojoExecutionException {
         // TODO Bunch of items that need to be parameterized properly.
@@ -95,7 +96,7 @@ public class RPMPackagerStrategy extends BasePackagerStrategy {
         // Get the mapping for the files that the runner(s) need to install.
         for (RunnerStrategy runner : runners) {
             Map<File, Collection<File>> installSet = runner
-                    .getInstallSet(workingDirectory);
+                    .getInstallSet(mavenProj, workingDirectory);
             for (Map.Entry<File, Collection<File>> instEntry : installSet
                     .entrySet()) {
                 String leafDirName = instEntry.getKey().getName();
@@ -137,15 +138,6 @@ public class RPMPackagerStrategy extends BasePackagerStrategy {
 
         // Create the rpm
         task.execute();
-    }
-
-    /**
-     * Strips the '-SNAPSHOT' text from a string
-     * @param snapshotStr String that MAY have '-SNAPSHOT' inside of it
-     * @return The string with -SNAPSHOT removed
-     */
-    private String snapshotStripped(String requiredParam) {
-        return requiredParam.replaceFirst("-SNAPSHOT", "");
     }
 
     /**
