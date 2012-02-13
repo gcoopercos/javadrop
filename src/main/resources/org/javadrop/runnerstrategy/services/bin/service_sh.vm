@@ -32,6 +32,7 @@ below properly.
 #set( $JAVA_OPTS = "" )
 #set( $JAVA_HOME = "" )
 #set( $JAR = "" )
+#set( $log_dir = "" )
 #set( $configflag = "" )
 #set( $JAVA_CONFIG = "" )
 # Get the command line option for a java config param
