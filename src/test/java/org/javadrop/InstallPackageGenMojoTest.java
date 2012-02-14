@@ -324,7 +324,7 @@ public class InstallPackageGenMojoTest extends JavaDropBaseTest {
         assertTrue(
                 "Missing or incorrect test-service-facade context name",
                 fileResult
-                        .contains("p:contextPath=\"/jtytestsvc\" p:extractWAR="));
+                        .contains("p:contextPath=\"/\" p:extractWAR="));
         assertTrue("Missing or incorrect test-service-facade war name",
                 fileResult.contains("p:war=\"war/jtytestsvc.war\""));
         File rpmFile = new File(getBasedir() + "/target/testdata/" + testPrefix
