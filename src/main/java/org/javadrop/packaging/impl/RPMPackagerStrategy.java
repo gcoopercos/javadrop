@@ -81,7 +81,7 @@ public class RPMPackagerStrategy extends BasePackagerStrategy {
         task.setLicense("proprietary");
         // RPM has VERY SUBTLE and very bad behavior with text in the version.  It appears to work but doesn't upon
         // rpm -e 
-        task.setVersion(getRequiredParam("PKG_VERSION").replaceFirst("-SNAPSHOT", ""));
+        task.setVersion(getRequiredParam("PKG_VERSION").replaceFirst("-.*", ""));
         task.setRelease(getRequiredParam("PKG_RELEASE"));
         task.setGroup("Application/Office");
         task.setSourcePackage(getRequiredParam("PKG_NAME")
